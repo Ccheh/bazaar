@@ -56,8 +56,24 @@ export function walletFor(pk: string | undefined) {
   return createWalletClient({ account: account(pk), chain: arc, transport });
 }
 
-export const BUYER_PK = process.env.PRIVATE_KEY;           // MAIN — funded + 0.045 in escrow
-export const SELLER_PK = process.env.SERVICE_PRIVATE_KEY;  // SERVICE
+export const BUYER_PK = process.env.PRIVATE_KEY;           // MAIN — funded buyer (escrow)
+export const SELLER_PK = process.env.SERVICE_PRIVATE_KEY;  // legacy single-seller (slice1)
+
+// Distinct per-agent seller wallets (from root .env: BAZAAR_SELLER_{A,B,C}_{ADDR,PK}).
+export interface AgentWallet { name: string; address: Hex; pk: string }
+export const SELLER_KEYS: AgentWallet[] = (["A", "B", "C"] as const)
+  .map((n) => ({
+    name: n,
+    address: process.env[`BAZAAR_SELLER_${n}_ADDR`] as Hex,
+    pk: process.env[`BAZAAR_SELLER_${n}_PK`] as string,
+  }))
+  .filter((w) => Boolean(w.address) && Boolean(w.pk));
+
+/** Find the private key that controls a given service address (so the settler can settle as it). */
+export function keyForService(serviceAddress: string): string | undefined {
+  const hit = SELLER_KEYS.find((w) => w.address.toLowerCase() === serviceAddress.toLowerCase());
+  return hit?.pk ?? SELLER_PK; // fall back to the legacy single seller (slice1)
+}
 
 export function txUrl(hash: string): string {
   return `${EXPLORER}/tx/${hash}`;

@@ -2,13 +2,12 @@
 // claimBatch tx, as the service. This is the batched-settlement path of the nanopayment rail.
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { publicClient, walletFor, ESCROW, SELLER_PK, txUrl } from "../config.js";
+import { publicClient, walletFor, keyForService, ESCROW, txUrl } from "../config.js";
 import { decodeClaim, settleBatch, type Claim } from "../rail/escrow.js";
 
 const queueFile = process.env.BAZAAR_QUEUE ?? resolve(process.cwd(), "pending-claims.jsonl");
 
 async function main(): Promise<void> {
-  if (!SELLER_PK) throw new Error("set SERVICE_PRIVATE_KEY in ../.env");
   if (!existsSync(queueFile)) {
     console.log("no pending claims");
     return;
@@ -18,11 +17,24 @@ async function main(): Promise<void> {
     console.log("no pending claims");
     return;
   }
-  const claims: Claim[] = lines.map(decodeClaim);
-  console.log(`settling ${claims.length} claim(s) via claimBatch...`);
-  const tx = await settleBatch(walletFor(SELLER_PK), publicClient, ESCROW, claims);
-  console.log(`BATCH_SETTLED ${tx}`);
-  console.log(txUrl(tx));
+  // Group claims by the service they name; each service settles its OWN claims (it is msg.sender).
+  const groups = new Map<string, Claim[]>();
+  for (const c of lines.map(decodeClaim)) {
+    const key = c.service.toLowerCase();
+    const arr = groups.get(key) ?? [];
+    arr.push(c);
+    groups.set(key, arr);
+  }
+  for (const [service, claims] of groups) {
+    const pk = keyForService(service);
+    if (!pk) {
+      console.log(`no key for service ${service} — skipping ${claims.length} claim(s)`);
+      continue;
+    }
+    const tx = await settleBatch(walletFor(pk), publicClient, ESCROW, claims);
+    console.log(`BATCH_SETTLED service=${service} claims=${claims.length} ${tx}`);
+    console.log(txUrl(tx));
+  }
   writeFileSync(queueFile, ""); // clear settled claims
 }
 
