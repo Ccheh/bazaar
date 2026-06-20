@@ -8,6 +8,8 @@
     "slice1": "tsx src/runner/slice1.ts",
     "economy": "tsx src/runner/economy.ts",
     "slash": "tsx src/runner/slash.ts",
+    "market": "tsx src/runner/market.ts",
+    "byoa": "tsx src/runner/byoa.ts",
     "seller": "tsx src/runner/seller-proc.ts",
     "settle": "tsx src/runner/settler.ts",
     "check": "tsc --noEmit"

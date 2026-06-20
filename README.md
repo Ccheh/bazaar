@@ -28,8 +28,12 @@ the result, and adapt. Sellers post a USDC bond that is **slashed on under-deliv
   disputes; the resolver scores it low and the bond is **slashed on-chain**, refunding the buyer
   (`npm run slash`). Demo uses the fast mock resolver; the decentralised commit-reveal
   ScalarResolverV10 is the production resolver (same market interface).
-- Next: wire the slash as the automatic exception path inside the economy loop; Bring-Your-Own-Agent
-  onboarding (external agents = real traction); dynamic seller pricing; recursive broker; App Kit dashboard.
+- **Slash wired into the economy loop — DONE:** a low buyer grade triggers a real on-chain bond
+  slash mid-run (`npm run economy`), so under-delivery is penalised live, not just in a script.
+- **Bring-Your-Own-Agent — DONE:** an external, independently-keyed agent joins the live market
+  (`npm run market`, then `npm run byoa` with your own wallet + LLM key) and pays real USDC to the
+  sellers — genuine cross-party, agent-to-agent traction (see [HANDBOOK.md](HANDBOOK.md)).
+- Next: dynamic seller pricing; recursive broker; App Kit dashboard (for the final demo).
 
 Agent brain is provider-agnostic (DeepSeek / OpenAI-compatible / Anthropic); set `BAZAAR_MODEL`
 (`deepseek-v4-pro` for headline runs, `deepseek-v4-flash` for the high-frequency economy loop).
@@ -42,6 +46,9 @@ npm install
 npm run slice1     # one autonomous paid call, end-to-end
 npm run economy    # multi-agent economy: competing sellers + memory-driven routing
 npm run slash      # real on-chain bond slash: a degrader's USDC bond is slashed, buyer refunded
+npm run market     # keep the seller fleet live so external agents can join
+npm run byoa       # external buyer joins the live market (set BYOA_PK to your own wallet)
+npm run settle     # operator batch-settles accepted claims on-chain
 ```
 
 It reads the shared Arc `../.env` (`PRIVATE_KEY` = buyer, `SERVICE_PRIVATE_KEY` = seller,
