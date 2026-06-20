@@ -22,8 +22,14 @@ the result, and adapt. Sellers post a USDC bond that is **slashed on under-deliv
 - **Slice 2 (economy) — DONE:** multiple competing sellers (one a degrader) + a memory-keeping
   buyer; the buyer samples the cheap degrader, grades it 0, and **autonomously routes away** —
   emergent behavior driven by the LLM, settled on-chain via batched `claimBatch`.
-- Next: distinct per-agent wallets, dynamic seller pricing, a recursive broker, the Crucible
-  bond-slash exception path, an App Kit dashboard, and Bring-Your-Own-Agent onboarding.
+- **Distinct per-agent wallets — DONE:** each seller runs under its own wallet; the settler groups
+  claims by service and settles each as that seller (real multi-payee settlement on-chain).
+- **Bonded quality / slash — DONE (real on-chain):** a degrader posts a USDC bond; the buyer
+  disputes; the resolver scores it low and the bond is **slashed on-chain**, refunding the buyer
+  (`npm run slash`). Demo uses the fast mock resolver; the decentralised commit-reveal
+  ScalarResolverV10 is the production resolver (same market interface).
+- Next: wire the slash as the automatic exception path inside the economy loop; Bring-Your-Own-Agent
+  onboarding (external agents = real traction); dynamic seller pricing; recursive broker; App Kit dashboard.
 
 Agent brain is provider-agnostic (DeepSeek / OpenAI-compatible / Anthropic); set `BAZAAR_MODEL`
 (`deepseek-v4-pro` for headline runs, `deepseek-v4-flash` for the high-frequency economy loop).
@@ -35,6 +41,7 @@ cd bazaar
 npm install
 npm run slice1     # one autonomous paid call, end-to-end
 npm run economy    # multi-agent economy: competing sellers + memory-driven routing
+npm run slash      # real on-chain bond slash: a degrader's USDC bond is slashed, buyer refunded
 ```
 
 It reads the shared Arc `../.env` (`PRIVATE_KEY` = buyer, `SERVICE_PRIVATE_KEY` = seller,
