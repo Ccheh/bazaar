@@ -19,15 +19,22 @@ the result, and adapt. Sellers post a USDC bond that is **slashed on under-deliv
 ## Status (honest)
 
 - **Slice 1 — DONE:** one autonomous, LLM-decided, **real on-chain** paid call over the Cadence rail.
-- Next: persistent multi-agent loop (2 buyers + 3 sellers incl. a degrader + 1 broker), Crucible
-  bond-slash exception path, App Kit dashboard, Bring-Your-Own-Agent onboarding.
+- **Slice 2 (economy) — DONE:** multiple competing sellers (one a degrader) + a memory-keeping
+  buyer; the buyer samples the cheap degrader, grades it 0, and **autonomously routes away** —
+  emergent behavior driven by the LLM, settled on-chain via batched `claimBatch`.
+- Next: distinct per-agent wallets, dynamic seller pricing, a recursive broker, the Crucible
+  bond-slash exception path, an App Kit dashboard, and Bring-Your-Own-Agent onboarding.
+
+Agent brain is provider-agnostic (DeepSeek / OpenAI-compatible / Anthropic); set `BAZAAR_MODEL`
+(`deepseek-v4-pro` for headline runs, `deepseek-v4-flash` for the high-frequency economy loop).
 
 ## Run slice 1
 
 ```bash
 cd bazaar
 npm install
-npm run slice1
+npm run slice1     # one autonomous paid call, end-to-end
+npm run economy    # multi-agent economy: competing sellers + memory-driven routing
 ```
 
 It reads the shared Arc `../.env` (`PRIVATE_KEY` = buyer, `SERVICE_PRIVATE_KEY` = seller,

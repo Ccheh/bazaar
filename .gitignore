@@ -6,7 +6,8 @@ node_modules/
 dist/
 keys/
 *.log
-# runtime claim queue(s)
+# runtime claim queue(s) + ledgers
 pending-claims.jsonl
 *.queue.jsonl
+*.ledger.jsonl
 .DS_Store
