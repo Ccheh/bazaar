@@ -1,0 +1,12 @@
+node_modules/
+.env
+.env.*
+!.env.example
+*.local
+dist/
+keys/
+*.log
+# runtime claim queue(s)
+pending-claims.jsonl
+*.queue.jsonl
+.DS_Store
