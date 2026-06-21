@@ -3,7 +3,7 @@
 // DISCOVER sellers from the Registered event logs — permissionless, no central market.
 //   IdentityRegistry  0x8004A818BFB912233c491871b3d84c89A494BD9e (ERC-1967 proxy -> canonical impl)
 //   ReputationRegistry 0x8004B663056A597Dffe9eCcC1965A193B7388713
-import { type Address, type Hex, type PublicClient, type WalletClient, parseAbiItem, parseEventLogs } from "viem";
+import { type Address, type Hex, type PublicClient, type WalletClient, parseAbiItem, parseEventLogs, zeroHash } from "viem";
 
 export const IDENTITY_REGISTRY = "0x8004A818BFB912233c491871b3d84c89A494BD9e" as Address;
 export const REPUTATION_REGISTRY = "0x8004B663056A597Dffe9eCcC1965A193B7388713" as Address;
@@ -100,7 +100,7 @@ export async function postFeedback(wallet: WalletClient, pub: PublicClient, agen
   const hash = await wallet.writeContract({
     account: wallet.account!, chain: wallet.chain, address: REPUTATION_REGISTRY, abi: REPUTATION_ABI,
     functionName: "giveFeedback",
-    args: [agentId, BigInt(Math.round(score0to100)), 0, "quality", "", endpoint, "", "0x0000000000000000000000000000000000000000000000000000000000000000"],
+    args: [agentId, BigInt(Math.round(score0to100)), 0, "quality", "", endpoint, "", zeroHash],
   });
   await pub.waitForTransactionReceipt({ hash });
   return hash;

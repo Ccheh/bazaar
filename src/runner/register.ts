@@ -8,7 +8,8 @@ import { walletFor, publicClient, account } from "../config.js";
 import { SELLER_FLEET } from "../market/fleet.js";
 import { registerAgent, setAgentURI, readAgentURI } from "../rail/identity.js";
 
-const ROOT_ENV = resolve(dirname(fileURLToPath(import.meta.url)), "../../.env");
+// src/runner/register.ts -> three levels up to the shared root .env (arc/.env)
+const ROOT_ENV = resolve(dirname(fileURLToPath(import.meta.url)), "../../../.env");
 
 async function main(): Promise<void> {
   for (const s of SELLER_FLEET) {
