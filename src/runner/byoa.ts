@@ -7,16 +7,17 @@ import { formatEther } from "viem";
 import { account, publicClient, walletFor, ESCROW, CHAIN_ID } from "../config.js";
 import { escrowBalance } from "../rail/escrow.js";
 import { buyerRound, type Memory, type Persona, type SellerRef } from "../agents/economyBuyer.js";
+import { discoverBazaarSellers } from "../market/discovery.js";
 import { llmLabel } from "../agents/llm.js";
 
 const PK = process.env.BYOA_PK ?? process.env.PRIVATE_KEY;
 const ROUNDS = Number(process.env.BYOA_ROUNDS ?? 4);
-const SELLER_URLS = (process.env.BYOA_SELLERS ?? "http://127.0.0.1:7421,http://127.0.0.1:7422,http://127.0.0.1:7423")
-  .split(",").map((s) => s.trim()).filter(Boolean);
 
-async function discover(urls: string[]): Promise<SellerRef[]> {
+async function discoverByUrls(urls: string[]): Promise<SellerRef[]> {
   const found: SellerRef[] = [];
-  for (const url of urls) {
+  for (const raw of urls) {
+    const url = raw.trim().replace(/\/$/, "");
+    if (!url) continue;
     try {
       const q = (await (await fetch(`${url}/price`)).json()) as { name: string };
       found.push({ name: q.name, url });
@@ -35,8 +36,16 @@ async function main(): Promise<void> {
   console.log(`brain:  ${llmLabel()}`);
   console.log(`wallet: ${addr}`);
 
-  const sellers = await discover(SELLER_URLS);
-  if (sellers.length === 0) throw new Error(`no sellers reachable at ${SELLER_URLS.join(", ")} — is the market running?`);
+  let sellers: SellerRef[];
+  if (process.env.BYOA_SELLERS) {
+    sellers = await discoverByUrls(process.env.BYOA_SELLERS.split(","));
+    console.log(`discovery: explicit BYOA_SELLERS -> ${sellers.length} live`);
+  } else {
+    console.log("discovery: scanning the ERC-8004 IdentityRegistry on-chain...");
+    sellers = await discoverBazaarSellers(publicClient);
+    console.log(`discovery: ${sellers.length} live seller(s) found on-chain`);
+  }
+  if (sellers.length === 0) throw new Error("no live sellers discovered — is the market running + registered?");
   console.log(`market: ${sellers.map((s) => s.name).join(", ")}`);
 
   const before = await escrowBalance(publicClient, ESCROW, addr);

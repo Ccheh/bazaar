@@ -33,6 +33,9 @@ the result, and adapt. Sellers post a USDC bond that is **slashed on under-deliv
 - **Bring-Your-Own-Agent — DONE:** an external, independently-keyed agent joins the live market
   (`npm run market`, then `npm run byoa` with your own wallet + LLM key) and pays real USDC to the
   sellers — genuine cross-party, agent-to-agent traction (see [HANDBOOK.md](HANDBOOK.md)).
+- **On-chain discovery (ERC-8004) — DONE:** sellers register on Circle's ERC-8004 IdentityRegistry
+  with their endpoint as the agentURI (`npm run register`); buyers discover them from on-chain
+  `Registered` events and probe the endpoints (no central list) — permissionless discovery.
 - Next: dynamic seller pricing; recursive broker; App Kit dashboard (for the final demo).
 
 Agent brain is provider-agnostic (DeepSeek / OpenAI-compatible / Anthropic); set `BAZAAR_MODEL`
@@ -46,8 +49,9 @@ npm install
 npm run slice1     # one autonomous paid call, end-to-end
 npm run economy    # multi-agent economy: competing sellers + memory-driven routing
 npm run slash      # real on-chain bond slash: a degrader's USDC bond is slashed, buyer refunded
+npm run register   # publish each seller's endpoint on the ERC-8004 registry (on-chain discovery)
 npm run market     # keep the seller fleet live so external agents can join
-npm run byoa       # external buyer joins the live market (set BYOA_PK to your own wallet)
+npm run byoa       # external buyer DISCOVERS sellers on-chain + pays (set BYOA_PK to your wallet)
 npm run settle     # operator batch-settles accepted claims on-chain
 ```
 
