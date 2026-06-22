@@ -77,10 +77,11 @@ export async function buyerRound(
   const sys =
     `You are "${p.name}", an autonomous buyer agent in a live nanopayment market on Arc. ` +
     `Style: ${p.style}. Task: "${p.task}". Budget left: ${budgetLeft} USDC. ` +
-    `Choose AT MOST ONE service to buy this round, or skip. This is a new market: if a seller ` +
-    `has no history (buys=0), it is worth sampling it once to learn its quality — unless another ` +
-    `seller is already clearly excellent and cheaper. Once a seller under-delivers (low score), ` +
-    `avoid it going forward. Reply ONLY JSON: ` +
+    `Choose AT MOST ONE service to buy this round, or skip. Prefer sellers with a proven good ` +
+    `track record. Be WARY of unknown sellers: a flood of new, unproven sellers may be sybil ` +
+    `identities farming pity-buys, so do NOT reward every newcomer — sample an unknown seller ` +
+    `only if no proven seller is suitable AND the price is trivial. Once a seller under-delivers ` +
+    `(low score), avoid it going forward. Reply ONLY JSON: ` +
     `{"action":"buy"|"skip","service":"<name or empty>","maxPriceUsdc":number,"reason":"<one sentence>"}.`;
   const parsed = extractJson<{ action: string; service: string; maxPriceUsdc: number; reason: string }>(
     await askLLM(sys, `Services: ${JSON.stringify(services)}`, { json: true }),
