@@ -130,7 +130,7 @@ async function main(): Promise<void> {
       name: "Frugal",
       pk: BUYER_PK,
       budgetUsdc: 0.05,
-      task: "Summarize what Arc is in 3 bullet points.",
+      task: "Explain the main trade-offs between optimistic and ZK rollups in 3 concise bullet points.",
       style: "frugal but quality-aware; you hate paying for junk",
       qualityBar: 60,
     };

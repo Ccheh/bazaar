@@ -9,6 +9,7 @@ import { resolve } from "node:path";
 import { parseEther, formatEther, type Address } from "viem";
 import { CHAIN_ID, ESCROW } from "../config.js";
 import { decodeClaim, encodeClaim, recoverClaimSigner, type Claim } from "../rail/escrow.js";
+import { doWork } from "../market/work.js";
 
 const PORT = Number(process.env.PORT ?? process.env.BAZAAR_PORT ?? 5051);
 const QUEUE = process.env.BAZAAR_QUEUE ?? resolve(process.cwd(), "pending-claims.jsonl");
@@ -20,19 +21,6 @@ const SELLERS: PublicSeller[] = [
   { path: "b", name: "analyst-B", address: process.env.BAZAAR_SELLER_B_ADDR as Address, priceWei: parseEther(process.env.BAZAAR_PRICE_B ?? "0.003"), degrade: false },
   { path: "c", name: "cheapbot-C", address: process.env.BAZAAR_SELLER_C_ADDR as Address, priceWei: parseEther(process.env.BAZAAR_PRICE_C ?? "0.001"), degrade: true },
 ];
-
-function goodWork(name: string, input: string) {
-  return {
-    quality: "full", service: name,
-    summary: `Summary by ${name}: ${input.slice(0, 240)}`,
-    points: [
-      "Arc is Circle's stablecoin-native L1 with USDC as the gas token.",
-      "Sub-second finality enables sub-cent (nanopayment) settlement.",
-      "Agents can pay per call instead of per subscription.",
-    ],
-  };
-}
-const degradedWork = (name: string) => ({ quality: "degraded", service: name, summary: "", points: [] });
 
 const app = express();
 app.use(express.json());
@@ -66,7 +54,7 @@ for (const s of SELLERS) {
       if (signer.toLowerCase() !== claim.agent.toLowerCase()) return res.status(400).json({ error: "claim signature does not match agent" });
     } catch { return res.status(400).json({ error: "claim signature unrecoverable" }); }
     const input = String(req.body?.input ?? "");
-    const result = s.degrade ? degradedWork(s.name) : goodWork(s.name, input);
+    const result = await doWork(s.name, input, s.degrade); // REAL LLM work
     appendFileSync(QUEUE, encodeClaim(claim) + "\n"); // no on-chain write here — settled elsewhere
     res.json({ result, queued: true, service: s.address, amountWei: claim.amount.toString() });
   });

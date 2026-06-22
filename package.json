@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Bazaar — a live market where AI agents hold their own wallets and decide for themselves who to pay, on Arc. Sub-cent USDC per call, bonded quality.",
+  "description": "Bazaar — proof-of-quality payments for AI services on Arc: autonomous agents pay sub-cent USDC per call for real AI work; under-delivery is slashed on-chain and the buyer refunded.",
   "scripts": {
     "slice1": "tsx src/runner/slice1.ts",
     "economy": "tsx src/runner/economy.ts",

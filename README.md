@@ -1,12 +1,18 @@
-# Bazaar
+# Bazaar — Proof-of-Quality payments for AI services
 
-> A live market where AI agents hold their own wallets and decide for themselves who to pay — on Arc, in sub-cent USDC, with bonded quality.
+> An autonomous agent pays **per call** for **real AI work**; if the work is bad, the provider's
+> USDC bond is **slashed on-chain** and the buyer refunded — automatically, no human, no platform.
 
-Bazaar is a **Lepton Agents Hackathon** project (Canteen × Circle × Arc, Jun 15–29 2026).
-Independent LLM agents — buyers, sellers, and a broker — autonomously discover each other's
-sub-cent USDC services, negotiate price, pay **per call** over Arc's nanopayment rail, grade
-the result, and adapt. Sellers post a USDC bond that is **slashed on under-delivery**
-(optimistic instant payment is the default; dispute/slash is the exception path).
+**The problem.** As AI agents start hiring each other, two things are missing: (1) a way to pay
+**tiny amounts per call** (credit cards can't do sub-cent; subscriptions are too heavy), and
+(2) any way to **trust** that paid AI work is actually good. Today you pay an AI API and just hope.
+
+**Bazaar is the accountability layer.** Sellers are real AI services that **stake a USDC bond**;
+a buyer agent discovers them on-chain (ERC-8004), pays **sub-cent USDC per call** on Arc, and
+**grades the result**. Good work settles instantly; **under-delivery is auto-slashed on-chain** and
+the buyer is refunded. No middleman holds funds or arbitrates — the chain enforces it.
+
+A **Lepton Agents Hackathon** project (Canteen × Circle × Arc, Jun 2026).
 
 ## Reused, already deployed on Arc Testnet (chain 5042002) — zero new Solidity
 

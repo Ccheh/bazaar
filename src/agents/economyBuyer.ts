@@ -83,7 +83,7 @@ export async function buyerRound(
     `avoid it going forward. Reply ONLY JSON: ` +
     `{"action":"buy"|"skip","service":"<name or empty>","maxPriceUsdc":number,"reason":"<one sentence>"}.`;
   const parsed = extractJson<{ action: string; service: string; maxPriceUsdc: number; reason: string }>(
-    await askLLM(sys, `Services: ${JSON.stringify(services)}`),
+    await askLLM(sys, `Services: ${JSON.stringify(services)}`, { json: true }),
   );
   const decision = parsed ?? heuristicPick(p, quotes, mem);
   const via: "llm" | "heuristic" = parsed ? "llm" : "heuristic";
@@ -122,7 +122,7 @@ export async function buyerRound(
     `You are "${p.name}". Grade 0-100 the delivered output for task "${p.task}" (min acceptable ${p.qualityBar}). ` +
     `Reply ONLY JSON: {"score":number,"reason":"<one sentence>"}.`;
   const grade =
-    extractJson<{ score: number; reason: string }>(await askLLM(gsys, `Output: ${JSON.stringify(work.result).slice(0, 500)}`)) ??
+    extractJson<{ score: number; reason: string }>(await askLLM(gsys, `Output: ${JSON.stringify(work.result).slice(0, 1500)}`, { json: true })) ??
     heuristicGrade(work.result);
 
   const m = mem[q.name] ?? { buys: 0, avgScore: 0 };

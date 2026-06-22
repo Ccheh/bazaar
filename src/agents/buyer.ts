@@ -75,7 +75,7 @@ export async function buyerCycle(
     `Your style: ${p.style}. Your task: "${p.task}". Remaining budget: ${p.budgetUsdc} USDC. ` +
     `Decide whether ONE call to service "${quote.name}" priced at ${priceUsdc} USDC is worth buying. ` +
     `Reply with ONLY JSON: {"buy": boolean, "maxPriceUsdc": number, "reason": "<one short sentence>"}.`;
-  const raw = await askLLM(system, `Quote: ${priceUsdc} USDC from "${quote.name}". Worth it?`);
+  const raw = await askLLM(system, `Quote: ${priceUsdc} USDC from "${quote.name}". Worth it?`, { json: true });
   const parsed = extractJson<{ buy: boolean; maxPriceUsdc: number; reason: string }>(raw);
   const decision: BuyDecision = parsed
     ? { ...parsed, via: "llm" }
@@ -118,7 +118,7 @@ export async function buyerCycle(
     `You are "${p.name}". Grade the delivered output 0-100 for your task "${p.task}" ` +
     `(your minimum acceptable quality is ${p.qualityBar}). ` +
     `Reply with ONLY JSON: {"score": number, "reason": "<one short sentence>"}.`;
-  const gradeRaw = await askLLM(gradeSystem, `Output: ${JSON.stringify(work.result).slice(0, 600)}`);
+  const gradeRaw = await askLLM(gradeSystem, `Output: ${JSON.stringify(work.result).slice(0, 1500)}`, { json: true });
   const gradeParsed = extractJson<{ score: number; reason: string }>(gradeRaw);
   trace.grade = gradeParsed ? { ...gradeParsed, via: "llm" } : heuristicGrade(work.result);
 

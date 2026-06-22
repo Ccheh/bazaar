@@ -56,9 +56,14 @@ export function llmLabel(): string {
 
 // Default max_tokens is generous: thinking models (deepseek-v4-pro) emit a reasoning
 // chain; we cap the FINAL answer high enough to never truncate the JSON verdict.
-export async function askLLM(system: string, user: string, maxTokens = 2048): Promise<string | null> {
+export async function askLLM(
+  system: string,
+  user: string,
+  opts: { maxTokens?: number; json?: boolean } = {},
+): Promise<string | null> {
   const c = resolveLlm();
   if (c.provider === "none") return null;
+  const maxTokens = opts.maxTokens ?? 2048;
   try {
     if (c.provider === "anthropic") {
       const res = await fetch(`${c.baseUrl}/v1/messages`, {
@@ -81,22 +86,20 @@ export async function askLLM(system: string, user: string, maxTokens = 2048): Pr
     }
 
     // OpenAI-compatible (DeepSeek / OpenAI / OpenRouter / local Ollama, etc.).
-    // response_format json_object makes structured replies reliable (prompts say "JSON").
+    // json_object mode ONLY when the caller wants structured JSON (else it breaks plain-text replies).
+    const body: Record<string, unknown> = {
+      model: c.model,
+      max_tokens: maxTokens,
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: user },
+      ],
+    };
+    if (opts.json) body.response_format = { type: "json_object" };
     const res = await fetch(`${c.baseUrl}/chat/completions`, {
       method: "POST",
-      headers: {
-        "content-type": "application/json",
-        authorization: `Bearer ${c.apiKey}`,
-      },
-      body: JSON.stringify({
-        model: c.model,
-        max_tokens: maxTokens,
-        response_format: { type: "json_object" },
-        messages: [
-          { role: "system", content: system },
-          { role: "user", content: user },
-        ],
-      }),
+      headers: { "content-type": "application/json", authorization: `Bearer ${c.apiKey}` },
+      body: JSON.stringify(body),
     });
     if (!res.ok) return null;
     const json = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
