@@ -47,11 +47,27 @@ A **Lepton Agents Hackathon** project (Canteen × Circle × Arc, Jun 2026).
 Agent brain is provider-agnostic (DeepSeek / OpenAI-compatible / Anthropic); set `BAZAAR_MODEL`
 (`deepseek-v4-pro` for headline runs, `deepseek-v4-flash` for the high-frequency economy loop).
 
+## Trust model — what's real vs roadmap (honest)
+
+We'd rather under-claim. What a single run actually proves today:
+
+- **Real & on-chain:** sub-cent USDC per-call settlement; sellers' USDC **bonds are really slashed
+  on-chain** when a buyer grades them below par (`npm run demo` prints the tx); distinct seller
+  wallets; agents registered on the ERC-8004 IdentityRegistry.
+- **Operator-coordinated (not yet fully trustless):** the slash currently uses a **mock resolver**
+  and the runner holds both buyer+seller keys to open the dispute. A fully **trustless external**
+  slash — seller standing-bond + the real commit-reveal `ScalarResolverV10` + a staked/independent
+  grader (today the buyer judges with its own LLM) — is the roadmap, not done.
+- **Discovery** resolves a **published agentId directory** (+ best-effort recent-event scan), read
+  on-chain; it is not a full permissionless crawl (that needs an indexer).
+
 ## Run slice 1
 
 ```bash
 cd bazaar
 npm install
+npm run demo       # ⭐ the whole story in plain English: see real answers, pay for good ones,
+                   #    the bad one's bond is SLASHED and refunded to you — with on-chain tx links
 npm run slice1     # one autonomous paid call, end-to-end
 npm run economy    # multi-agent economy: competing sellers + memory-driven routing
 npm run slash      # real on-chain bond slash: a degrader's USDC bond is slashed, buyer refunded

@@ -28,6 +28,7 @@ export interface RoundResult {
   via: "llm" | "heuristic";
   reason: string;
   gradeReason?: string;
+  output?: unknown; // the actual delivery the seller returned (so a demo can show the real answer)
 }
 
 async function getQuote(s: SellerRef): Promise<Quote | null> {
@@ -130,5 +131,5 @@ export async function buyerRound(
   const buys = m.buys + 1;
   mem[q.name] = { buys, avgScore: Math.round((m.avgScore * m.buys + grade.score) / buys) };
 
-  return { buyer: p.name, bought: true, chosen: q.name, priceUsdc: q.priceUsdc, score: grade.score, via, reason: decision.reason, gradeReason: grade.reason };
+  return { buyer: p.name, bought: true, chosen: q.name, priceUsdc: q.priceUsdc, score: grade.score, via, reason: decision.reason, gradeReason: grade.reason, output: work.result };
 }

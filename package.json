@@ -5,6 +5,7 @@
   "type": "module",
   "description": "Bazaar — proof-of-quality payments for AI services on Arc: autonomous agents pay sub-cent USDC per call for real AI work; under-delivery is slashed on-chain and the buyer refunded.",
   "scripts": {
+    "demo": "tsx src/runner/demo.ts",
     "slice1": "tsx src/runner/slice1.ts",
     "economy": "tsx src/runner/economy.ts",
     "slash": "tsx src/runner/slash.ts",
