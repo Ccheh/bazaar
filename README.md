@@ -19,8 +19,9 @@ A **Lepton Agents Hackathon** project (Canteen × Circle × Arc, Jun 2026).
 | Piece | Address | Role |
 |---|---|---|
 | Cadence `PaymentEscrowV2` | `0xc95b1b20f91901206ba3ea94bbc7313e7cd82f8d` | per-call x402 USDC rail (native 18-dec USDC, signed claims) |
-| Crucible `CrucibleMarketV7` | `0x9934bAF33bcF0dfD14040f8ddd5DdF18eCfEFb59` | USDC-bond graded slash (exception path) |
-| Crucible `ScalarResolverV10` | `0xb377b32a65166bcA3d9b14B8C5c1B636817F4c01` | calibration-weighted resolver |
+| Crucible market **(what the demo uses)** | `0x61996d505d6510a339f39c9923519b2f5350f61c` | USDC-bond escrow + slash-on-dispute |
+| `MockResolver` **(what the demo uses)** | `0x76696e3c541eb32c81cfc1cbfb3e5e5ef1c4d35f` | records the grade — testing only, **not trustless** |
+| `CrucibleMarketV7` / `ScalarResolverV10` **(roadmap, NOT on the demo path)** | `0x9934…fb59` / `0xb377…4c01` | deployed commit-reveal resolver, not yet wired in |
 
 ## Status (honest)
 

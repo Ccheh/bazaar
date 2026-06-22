@@ -62,7 +62,7 @@ async function main(): Promise<void> {
   const escBefore = await escrowBalance(publicClient, ESCROW, buyerAddr);
   console.log(`Your prepaid balance: ${formatEther(escBefore)} USDC  (real testnet money — no real value)\n`);
 
-  let goodCount = 0, goodPaid = 0, slashedBack = 0;
+  let goodCount = 0, goodPaid = 0, slashedBack = 0, toWallet = 0;
   const proofs: string[] = [];
   try {
     for (const s of SELLER_FLEET) {
@@ -74,8 +74,10 @@ async function main(): Promise<void> {
       if (g.score < BAR) {
         const out = await slashSeller(s.key, g.score * 100);
         slashedBack += Number(formatEther(out.bondSlashed));
+        toWallet += Number(formatEther(out.paidToAgent));
         proofs.push(out.txHash);
-        console.log(`   👎 bad answer → "${s.name}" had staked a bond; ${formatEther(out.bondSlashed)} USDC of it was SLASHED and sent back to YOU.`);
+        console.log(`   👎 bad answer → "${s.name}"'s bond was SLASHED ${formatEther(out.bondSlashed)} USDC;`);
+        console.log(`      ${formatEther(out.paidToAgent)} USDC total returned to your wallet (its slashed bond + your dispute deposit back).`);
         console.log(`      proof: ${txUrl(out.txHash)}`);
       } else {
         goodCount++; goodPaid += priceUsdc;
@@ -87,13 +89,18 @@ async function main(): Promise<void> {
     console.log("settling the calls on-chain…\n");
     const settlerOut = await runSettler();
     for (const m of settlerOut.matchAll(/(0x[0-9a-fA-F]{64})/g)) proofs.push(m[1]);
+    const escAfter = await escrowBalance(publicClient, ESCROW, buyerAddr);
 
     console.log("===================== the money story =====================");
-    console.log(`Good answers you kept:   ${goodCount}  (paid ${goodPaid.toFixed(4)} USDC)`);
-    console.log(`Bad answers refused:     bond slashed → ${slashedBack.toFixed(4)} USDC sent back to your wallet`);
-    console.log(`Net: the bad seller LOST money; you only really paid for good work.`);
-    console.log(`\nEverything above is real and on Arc — proof:`);
+    console.log(`Good answers kept:        ${goodCount}  (paid ${goodPaid.toFixed(4)} USDC for them)`);
+    console.log(`Prepaid balance:          ${formatEther(escBefore)} → ${formatEther(escAfter)} USDC  (it went DOWN by what you paid)`);
+    console.log(`Refunded to your wallet:  ${toWallet.toFixed(4)} USDC  (the bad seller's slashed bond + your dispute deposit)`);
+    console.log(`Net: the bad seller LOST its bond; you kept the good answers AND got money back.`);
+    console.log(`\nReal & on-chain — proof:`);
     for (const p of [...new Set(proofs)]) console.log(`   ${txUrl(p)}`);
+    console.log(`\n⚠ honest note: today this is OPERATOR-COORDINATED — one runner holds the keys and a`);
+    console.log(`  mock resolver records the grade, so it can't yet stop a dishonest operator. A trustless`);
+    console.log(`  independent grader + at-risk seller bond is the roadmap (see README "Trust model").`);
   } finally {
     for (const c of children) c.kill();
     rmSync(QUEUE, { force: true });
