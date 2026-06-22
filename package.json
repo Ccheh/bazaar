@@ -9,6 +9,8 @@
     "economy": "tsx src/runner/economy.ts",
     "slash": "tsx src/runner/slash.ts",
     "market": "tsx src/runner/market.ts",
+    "market:public": "tsx src/runner/market-public.ts",
+    "settle:remote": "tsx src/runner/remote-settler.ts",
     "register": "tsx src/runner/register.ts",
     "byoa": "tsx src/runner/byoa.ts",
     "seller": "tsx src/runner/seller-proc.ts",
