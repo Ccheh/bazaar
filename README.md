@@ -97,16 +97,16 @@ re-litigated after the fact — the exact failure mode that broke a $60M UMA dis
   STAKED validators** (`CrucibleMarketV7` + `ScalarResolverV10`; source in [contracts/v07](contracts/v07)),
   each running a **distinct model** via commit-reveal over the protocol's real 30+30-min windows. All four
   proofs below are from **one committed run** ([.trustless-state.json](.trustless-state.json)):
-  - **bad delivery → consensus 0/100 → seller bond slashed 0.02 USDC, buyer refunded 0.03079**
-    ([tx 0x5469f51c](https://testnet.arcscan.app/tx/0x5469f51c692717b14cedadd3a81bc754ae3821e1da8d6feab71684e9e125e4f3));
+  - **bad delivery → consensus 5/100 → seller bond slashed 0.019 USDC, buyer refunded 0.02925**
+    ([tx 0x58955ae2](https://testnet.arcscan.app/tx/0x58955ae21a4392721d59b75c8a144874b5457e1ff8b57013fb08bdb1cec9bafb));
   - **good delivery + a lying buyer disputing it → consensus 100/100 → seller bond protected AND the liar
     forfeits its 0.001 dispute bond to the seller**
-    ([tx 0x2d411523](https://testnet.arcscan.app/tx/0x2d41152349c03415d7f9528a195c2f1d21d69c413109431a70ca093daa8642d1));
+    ([tx 0xe313a902](https://testnet.arcscan.app/tx/0xe313a9024fcd58b3debcdfb1955f1b6b3bc4eb9727ce6f278b4c1af0b93a64d3));
   - an in-code assertion verifies, on these real numbers, that **a lying buyer cannot slash an honest
     seller** — PASS ✅;
   - **validator accountability**: V1/V2 graded with live distinct models (`deepseek-v4-pro`,
     `deepseek-v4-flash`), and V3 was forced off-consensus to demonstrate slashing deterministically →
-    **V3 itself was slashed 0.00882 USDC** on-chain (in the bad-market tx above); the identical off-vote
+    **V3 itself was slashed 0.01308 USDC** on-chain (in the bad-market tx above); the identical off-vote
     *within* tolerance of the 100/100 consensus was correctly NOT slashed.
   (A run with **three live distinct models** — pro/flash/chat — is `npm run circle:trustless`.)
 - **External agent over the public rail — DONE — `npm run byoa:ext`:** a separate, independently-keyed
@@ -158,10 +158,10 @@ We'd rather under-claim. What a single run actually proves today:
 - **Calibration weighting is dormant at demo scale:** with only 1–2 resolved markets every validator
   sits at the 0.50× starting calibration, so the shown median is effectively unweighted — the weighting
   becomes load-bearing once validators build an on-chain accuracy record over many markets.
-- **The headline run penalized a strict no-answer:** in the committed slash run the "bad" delivery was
-  empty (an LLM hiccup hit the fallback) and the deviating validator was a *forced* outlier to exercise
-  the slash path deterministically; a run where three live models organically disagree on a borderline
-  delivery is the next proof.
+- **The deviating validator was a *forced* outlier:** in the committed slash run the "bad" delivery is a
+  genuine lazy non-answer (graded ~0–5 by two live distinct models, V1/V2), but V3 was deliberately forced
+  off-consensus to exercise the validator-slash path deterministically. A run where three live models
+  organically disagree on a borderline delivery is the next proof.
 - **Circle wallets:** `npm run circle:pay` is a standalone DCW nanopayment (parallel proof). `npm run
   circle:trustless` goes further — the Circle wallet itself **opens + disputes** the bonded Crucible
   market (open/dispute txs confirmed), so Circle is wired **through** the slash rail; the validator
@@ -208,7 +208,7 @@ still runs. **Testnet only.**
 
 **Committed evidence (verify, don't trust)** — run `npm run verify` to print them all with arcscan links.
 Each in-repo file maps to exactly the tx hashes the README cites:
-- `.trustless-state.json` — the trustless run: bad-slash `0x5469f51c`, lying-buyer forfeit `0x2d411523`, V3 validator slash (in the bad-market tx).
+- `.trustless-state.json` — the trustless run: bad-slash `0x58955ae2`, lying-buyer forfeit `0xe313a902`, V3 validator slash (in the bad-market tx).
 - `circle-pay.json` — Circle DCW nanopayment `0x4c6db2f9`.
 - `.circle-trustless-state.json` — Circle wallet open `0x7c9b913b` + dispute `0xf7ea1cbb` + resolve `0xf9dadc5e` (seller slashed, 0.03079 refunded to the Circle wallet) — full loop closed.
 - `byoa-external.json` — external-agent payment `0xac74ffee`.

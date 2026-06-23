@@ -17,49 +17,49 @@
     "BAD": {
       "label": "BAD",
       "scenario": "lazy seller, justified dispute",
-      "delivery": "",
-      "nonce": "1782176350934",
+      "delivery": "They each have their own strengths, so it depends.",
+      "nonce": "1782195765337",
       "votes": {
         "0x9D87E0FAbd4CD5Fab696aE2b560fD54f32DE7A68": {
-          "scoreBps": 0,
-          "salt": "0xa920f294180838aa8ec2d67db4a71a0f7f753233dc5b70169e1482ea5ad6b610",
-          "reason": "No delivery provided.",
+          "scoreBps": 500,
+          "salt": "0x792aabe4b3017b94c15fc5921c520cc2a5a9ca0f9954f590f81bb82a0d56b263",
+          "reason": "Vague non-answer; fails to list any trade-offs.",
           "via": "llm:deepseek-v4-pro",
           "committed": true,
           "revealed": true
         },
         "0x874b1b520620844B47bb8d98F50D7bB1b65cBa4E": {
           "scoreBps": 0,
-          "salt": "0x6ea58a949f52fd3c37abd3537b6f2f42fe01dc84a1ef0285c4209d5d2fa67d72",
-          "reason": "No delivery provided; cannot evaluate.",
+          "salt": "0xd15f84a3beef3a868af07b50df92d676c83cb2d816cb89e9887e4993796b36e5",
+          "reason": "Delivery is a one-line vague statement with no concrete trade-offs, failing all criteria.",
           "via": "llm:deepseek-v4-flash",
           "committed": true,
           "revealed": true
         },
         "0x468Ac1879e5828ac5bB6141F496BC622248904E3": {
           "scoreBps": 9000,
-          "salt": "0xef6c23b49689b844ad60c0902c264a92cac1d8cd2bcd69b0cab7bd7da8c05a1b",
+          "salt": "0x5fb9283e379174e3aff336a9ed0e6f79af2d05069c4efc4ed478556067290d9b",
           "reason": "forced off-consensus (accountability demo)",
           "via": "forced-outlier",
           "committed": true,
           "revealed": true
         }
       },
-      "marketId": "0xf802ec39fa9074b7597559720d55ccc7e4af4cda203608debe89f2ad5cbb011b",
+      "marketId": "0x4e66344db29657a349ab73e9a3ce5e83da1dce35761f995ec3f90ebbd03ca341",
       "disputed": true,
-      "commitDeadline": 1782178175,
-      "revealDeadline": 1782179975,
+      "commitDeadline": 1782197705,
+      "revealDeadline": 1782199505,
       "outcome": {
-        "scoreBps": 0,
-        "paidToService": "0",
-        "paidToAgent": "30790000000000000",
-        "bondSlashed": "20000000000000000",
-        "disputeBondToService": "0",
-        "txHash": "0x5469f51c692717b14cedadd3a81bc754ae3821e1da8d6feab71684e9e125e4f3",
+        "scoreBps": 500,
+        "paidToService": "539500000000000",
+        "paidToAgent": "29250500000000000",
+        "bondSlashed": "19000000000000000",
+        "disputeBondToService": "50000000000000",
+        "txHash": "0x58955ae21a4392721d59b75c8a144874b5457e1ff8b57013fb08bdb1cec9bafb",
         "slashedValidators": [
           {
             "validator": "0x468Ac1879e5828ac5bB6141F496BC622248904E3",
-            "amount": "8820000000000000"
+            "amount": "13081015739393360"
           }
         ]
       }
@@ -67,45 +67,45 @@
     "GOOD": {
       "label": "GOOD",
       "scenario": "honest seller, a LYING buyer disputes good work",
-      "delivery": "- Optimistic rollups assume transactions are valid by default, relying on fraud proofs and a challenge period (typically 7 days) for finality, while ZK rollups use cryptographic validity proofs for instant finality but require complex, computationally heavy proof generation.\n- ZK rollups achieve superior data compression, minimizing on-chain costs, whereas optimistic rollups must post more data (e.g., state differences) for potential fraud verification, leading to higher calldata expenses but preserving easier EVM compatibility.\n- Optimistic rollups introduce a trust assumption during the dispute window, layered with economic incentives, whereas ZK rollups offer stronger trustless security via validity proofs, though at the risk of soundness bugs in complex proof circuits.",
-      "nonce": "1782176350935",
+      "delivery": "* **Finality Time:** Optimistic rollups introduce a lengthy challenge period (e.g., 7 days) to allow fraud proofs, delaying withdrawals and cross-chain messages, whereas ZK rollups achieve near-instant finality via on-chain validity proofs.\n* **Cost Structure:** ZK rollups incur higher upfront computational costs to generate succinct proofs, but drastically reduce on-chain data posting through compression, while optimistic rollups have low per-transaction execution costs but higher calldata overhead.\n* **EVM Compatibility & Complexity:** Optimistic rollups inherently favor straightforward EVM equivalence and developer tooling, whereas ZK rollups require advanced cryptographic engineering, making full, performant EVM support more challenging to implement.",
+      "nonce": "1782195765338",
       "votes": {
         "0x9D87E0FAbd4CD5Fab696aE2b560fD54f32DE7A68": {
           "scoreBps": 10000,
-          "salt": "0xb0f2f0ccaa77a87baed3898660822da6a717ad97c4991ace4d713af2fe37e97e",
-          "reason": "The delivery gives three clear, accurate trade-offs covering finality/latency, data costs/compatibility, and security model, exactly as required.",
+          "salt": "0xb7d76e99e0cf5fda7b926f33163b2a99a9444d229acca5eb55d56ebd9c2ec3ba",
+          "reason": "The answer provides 3 distinct, accurate, and concrete trade-offs covering finality, cost, and EVM compatibility, with proper contrast between both rollup types",
           "via": "llm:deepseek-v4-pro",
           "committed": true,
           "revealed": true
         },
         "0x874b1b520620844B47bb8d98F50D7bB1b65cBa4E": {
           "scoreBps": 10000,
-          "salt": "0x2d535f648055c78d818c4d43828c07d5b5aa041df33db10d2427195bc22eabad",
-          "reason": "The answer accurately and concisely covers three distinct, concrete trade-offs between optimistic and ZK rollups, addressing both sides and meeting all criteria",
+          "salt": "0xbf5ca833fdb2a2d827f5bc162653d922e979f02c86029a6a9c5353f9e8ebc054",
+          "reason": "The answer provides three distinct, concrete trade-offs covering finality, cost, and EVM compatibility, accurately addressing both rollup types.",
           "via": "llm:deepseek-v4-flash",
           "committed": true,
           "revealed": true
         },
         "0x468Ac1879e5828ac5bB6141F496BC622248904E3": {
           "scoreBps": 9000,
-          "salt": "0xa1582321bda811b7f84a404b34bb8832f084199ca90da038d2d73752a56d7858",
+          "salt": "0x3cf4a7939b36b07548e47ce133adc3df14e6c6f06e783c57e7106c40283788f9",
           "reason": "forced off-consensus (accountability demo)",
           "via": "forced-outlier",
           "committed": true,
           "revealed": true
         }
       },
-      "marketId": "0xda6aa14dbefe31649527f2d2dd65a96498e1d3d8acc609296adac7106e2b1718",
+      "marketId": "0x8012410547a448226004522ea8f8d56a878e9c6db0a688ac97c641145c9d7a44",
       "disputed": true,
-      "commitDeadline": 1782178178,
-      "revealDeadline": 1782179978,
+      "commitDeadline": 1782197709,
+      "revealDeadline": 1782199509,
       "outcome": {
         "scoreBps": 10000,
         "paidToService": "10790000000000000",
         "paidToAgent": "0",
         "bondSlashed": "0",
         "disputeBondToService": "1000000000000000",
-        "txHash": "0x2d41152349c03415d7f9528a195c2f1d21d69c413109431a70ca093daa8642d1",
+        "txHash": "0xe313a9024fcd58b3debcdfb1955f1b6b3bc4eb9727ce6f278b4c1af0b93a64d3",
         "slashedValidators": []
       }
     }
