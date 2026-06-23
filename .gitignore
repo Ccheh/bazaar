@@ -11,3 +11,9 @@ pending-claims.jsonl
 *.queue.jsonl
 *.ledger.jsonl
 .DS_Store
+
+
+# Circle secrets (NEVER commit) — wallet list (addresses) IS committed
+circle-entity-secret.txt
+circle-recovery.dat
+*.secret

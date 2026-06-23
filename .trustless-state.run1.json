@@ -1,0 +1,108 @@
+{
+  "validators": [
+    {
+      "name": "V1",
+      "address": "0x9D87E0FAbd4CD5Fab696aE2b560fD54f32DE7A68"
+    },
+    {
+      "name": "V2",
+      "address": "0x874b1b520620844B47bb8d98F50D7bB1b65cBa4E"
+    },
+    {
+      "name": "V3",
+      "address": "0x468Ac1879e5828ac5bB6141F496BC622248904E3"
+    }
+  ],
+  "markets": {
+    "BAD": {
+      "label": "BAD",
+      "scenario": "lazy seller, justified dispute",
+      "delivery": "",
+      "nonce": "1782149619792",
+      "votes": {
+        "0x9D87E0FAbd4CD5Fab696aE2b560fD54f32DE7A68": {
+          "scoreBps": 0,
+          "salt": "0x8decc7f74cdf21094cefa5df2eb104a609cc6d0bf3b7f48938c4feb176ee23a2",
+          "reason": "Empty delivery provides no explanation, failing all criteria.",
+          "via": "llm",
+          "committed": true,
+          "revealed": true
+        },
+        "0x874b1b520620844B47bb8d98F50D7bB1b65cBa4E": {
+          "scoreBps": 0,
+          "salt": "0xa6d714e9fdc87e28d68c93b2f9f6bcaeb69b544b815d8d4de5956dd55c4aea41",
+          "reason": "(heuristic: 0 criteria keywords, 0 points)",
+          "via": "heuristic",
+          "committed": true,
+          "revealed": true
+        },
+        "0x468Ac1879e5828ac5bB6141F496BC622248904E3": {
+          "scoreBps": 0,
+          "salt": "0x2ddc8fdf7880cf05a233945ffe92de9798c3fcfb356744b7570b407be0ad8ef5",
+          "reason": "No delivery provided.",
+          "via": "llm",
+          "committed": true,
+          "revealed": true
+        }
+      },
+      "marketId": "0x7c34a0030b2a6016e3a5aaf53574be6353efaf21226863993d65a3e7ca3558be",
+      "disputed": true,
+      "commitDeadline": 1782151471,
+      "revealDeadline": 1782153271,
+      "outcome": {
+        "scoreBps": 0,
+        "paidToService": "0",
+        "paidToAgent": "30790000000000000",
+        "bondSlashed": "20000000000000000",
+        "disputeBondToService": "0",
+        "txHash": "0xdb3e6a699eb3626f135b459bb4a04b7a486b8c7b90ba206a552be10e5e47ebd5"
+      }
+    },
+    "GOOD": {
+      "label": "GOOD",
+      "scenario": "honest seller, a LYING buyer disputes good work",
+      "delivery": "- **Finality time**: Optimistic rollups have delayed finality (e.g., ~7-day challenge period), while ZK rollups achieve near-instant finality once the validity proof is verified on-chain.\n- **Computation cost**: Optimistic rollups are cheaper per transaction as they only require fraud proofs when challenged; ZK rollups incur high constant costs to generate and verify cryptographic proofs.\n- **Security model**: Optimistic rollups rely on at least one honest watcher to challenge fraud (1-of-N trust), whereas ZK rollups depend on the soundness of complex zero-knowledge cryptography, reducing trust assumptions but increasing implementation risk.",
+      "nonce": "1782149619793",
+      "votes": {
+        "0x9D87E0FAbd4CD5Fab696aE2b560fD54f32DE7A68": {
+          "scoreBps": 10000,
+          "salt": "0x39f4adc671512892424a6997b4ba010ed14c245433e1b9402fbe932aa3f2f384",
+          "reason": "All three bullet points are concise, accurate, and cover distinct trade-offs as required.",
+          "via": "llm",
+          "committed": true,
+          "revealed": true
+        },
+        "0x874b1b520620844B47bb8d98F50D7bB1b65cBa4E": {
+          "scoreBps": 10000,
+          "salt": "0xc04b1ee4362e44808b851edfe3ccfacc31d031975d43e2726df82faa3fedfebc",
+          "reason": "The answer provides 3 accurate, distinct, and concise trade-offs covering finality, cost, and security, satisfying all rubric criteria.",
+          "via": "llm",
+          "committed": true,
+          "revealed": true
+        },
+        "0x468Ac1879e5828ac5bB6141F496BC622248904E3": {
+          "scoreBps": 10000,
+          "salt": "0xf1618e6e3feee192156d04f23664fd407dfba70de24fd2d6054f921aaefdb84d",
+          "reason": "Three distinct, accurate trade-offs covering finality, computation cost, and security model.",
+          "via": "llm",
+          "committed": true,
+          "revealed": true
+        }
+      },
+      "marketId": "0xae31d7c3f1060fb69af6708ef0758a344ab53869fe6be13e1eae826b9108a4bf",
+      "disputed": true,
+      "commitDeadline": 1782151475,
+      "revealDeadline": 1782153275,
+      "outcome": {
+        "scoreBps": 10000,
+        "paidToService": "10790000000000000",
+        "paidToAgent": "0",
+        "bondSlashed": "0",
+        "disputeBondToService": "1000000000000000",
+        "txHash": "0x3b8f7f0f4a2590f4f5ef188219a4b034473d8ca9154283943ddf8643da713e59"
+      }
+    }
+  },
+  "agentAddr": "0xA94175a5cA5Ad5c96c96dcbfB97255b9D8683054",
+  "serviceAddr": "0xD6F20Cceb00dd31caC12EFE840F747A9765A360a"
+}

@@ -15,10 +15,19 @@ interface LlmConfig {
   model: string;
 }
 
-/** Resolve the active provider from env. Priority: DeepSeek → generic OpenAI-compatible → Anthropic. */
+/** Resolve the active provider from env. Priority: DeepSeek → generic OpenAI-compatible → Anthropic.
+ *  BAZAAR_LLM_PROVIDER (deepseek|openai|anthropic) forces a specific provider (e.g. Claude via a
+ *  relay set as ANTHROPIC_BASE_URL + ANTHROPIC_API_KEY) regardless of the default priority. */
 export function resolveLlm(): LlmConfig {
   const model = process.env.BAZAAR_MODEL;
-  if (process.env.DEEPSEEK_API_KEY) {
+  const forced = process.env.BAZAAR_LLM_PROVIDER?.toLowerCase();
+  if (forced === "anthropic" && process.env.ANTHROPIC_API_KEY) {
+    return { provider: "anthropic", baseUrl: process.env.ANTHROPIC_BASE_URL ?? "https://api.anthropic.com", apiKey: process.env.ANTHROPIC_API_KEY, model: model ?? "claude-opus-4-6" };
+  }
+  if (forced === "openai" && process.env.OPENAI_API_KEY) {
+    return { provider: "openai", baseUrl: process.env.OPENAI_BASE_URL ?? "https://api.openai.com/v1", apiKey: process.env.OPENAI_API_KEY, model: model ?? "gpt-4o-mini" };
+  }
+  if (process.env.DEEPSEEK_API_KEY && forced !== "anthropic" && forced !== "openai") {
     return {
       provider: "deepseek",
       baseUrl: process.env.DEEPSEEK_BASE_URL ?? "https://api.deepseek.com",
@@ -59,10 +68,11 @@ export function llmLabel(): string {
 export async function askLLM(
   system: string,
   user: string,
-  opts: { maxTokens?: number; json?: boolean } = {},
+  opts: { maxTokens?: number; json?: boolean; model?: string } = {},
 ): Promise<string | null> {
   const c = resolveLlm();
   if (c.provider === "none") return null;
+  if (opts.model) c.model = opts.model; // per-call model override (e.g. distinct model per validator)
   const maxTokens = opts.maxTokens ?? 2048;
   try {
     if (c.provider === "anthropic") {

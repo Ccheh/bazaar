@@ -1,0 +1,16 @@
+[
+  {
+    "id": "d411df2d-5b56-5369-82c9-366e7b0ed5f7",
+    "address": "0x9608b21d6fbe4ab21e3df676cb210cc1171ce2a2",
+    "blockchain": "ARC-TESTNET",
+    "accountType": "EOA",
+    "state": "LIVE"
+  },
+  {
+    "id": "b393dee7-dc00-5e0b-8bd6-28febd54e8ea",
+    "address": "0xdab8fe0ba2192ceaa6bf33467bbe8fbe00a96f22",
+    "blockchain": "ARC-TESTNET",
+    "accountType": "EOA",
+    "state": "LIVE"
+  }
+]

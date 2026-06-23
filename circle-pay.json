@@ -1,0 +1,13 @@
+{
+  "buyerWallet": "0x9608b21d6fbe4ab21e3df676cb210cc1171ce2a2",
+  "buyerWalletId": "d411df2d-5b56-5369-82c9-366e7b0ed5f7",
+  "blockchain": "ARC-TESTNET",
+  "seller": "0xD6F20Cceb00dd31caC12EFE840F747A9765A360a",
+  "amountUsdc": "0.002",
+  "circleTxId": "593afd40-f8f5-5fef-b769-6d89b4df1485",
+  "state": "COMPLETE",
+  "txHash": "0x4c6db2f95bcec0ff88a7578dda06228776527e5cd488a14a295b879c597c094f",
+  "sellerBalanceBefore": "0.0695641062788949",
+  "sellerBalanceAfter": "0.0715641062788949",
+  "task": "Explain the main trade-offs between optimistic and ZK rollups in 3 concise bullet points."
+}

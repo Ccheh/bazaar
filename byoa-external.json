@@ -1,0 +1,8 @@
+{
+  "externalAgent": "0x19D19136dB068c6f2653ae01a654933732aC525F",
+  "seller": "0x98DAcDcD539888012245C34617326585e9Bd8dc3",
+  "amountUsdc": "0.002",
+  "settleTx": "0xac74ffeebb45f9760018916fb03196915184a075ed77b800a9218ad92cb4799a",
+  "extEscrowBefore": "0.006",
+  "extEscrowAfter": "0.004"
+}
