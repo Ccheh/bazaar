@@ -4,19 +4,19 @@
       "scoreBps": 0,
       "salt": "0xffcf3fa23f12c2b3876074729d06850bfab1cc46ce838d299c4c8b2f7670a5db",
       "committed": true,
-      "revealed": false
+      "revealed": true
     },
     "0x874b1b520620844B47bb8d98F50D7bB1b65cBa4E": {
       "scoreBps": 0,
       "salt": "0xd1ea31157b9a61112fd34a9453426b8ef381d5fec3f1c551eb37e44a84b38ab6",
       "committed": true,
-      "revealed": false
+      "revealed": true
     },
     "0x468Ac1879e5828ac5bB6141F496BC622248904E3": {
       "scoreBps": 1000,
       "salt": "0x70eb01064c8b8b12a0985920ed5e57adc4b10562c81a49faca1a6d66a0194653",
       "committed": true,
-      "revealed": false
+      "revealed": true
     }
   },
   "marketId": "0x517cd82b031a45a6efa202589aad32819fe4565592d8f8c27536fffbf8ddfe9c",

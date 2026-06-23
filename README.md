@@ -16,6 +16,47 @@ the buyer is refunded. No middleman holds funds or arbitrates — the chain enfo
 
 A **Lepton Agents Hackathon** project (Canteen × Circle × Arc, Jun 2026).
 
+## How it works
+
+```mermaid
+flowchart TB
+    B["🤖 Buyer agent<br/>(can be a Circle wallet)"]
+    S["🛠️ Seller agent<br/>real LLM work"]
+    ID[("ERC-8004<br/>IdentityRegistry")]
+
+    B -->|"① discover on-chain"| ID
+    B -->|"② pay sub-cent USDC / call<br/>(x402 optimistic · reused rail)"| S
+    S -->|"③ stake USDC bond +<br/>pre-commit criteriaHash"| MKT["CrucibleMarketV7<br/>bonded escrow (reused)"]
+    B -->|"④ dispute bad work<br/>(posts dispute bond)"| MKT
+
+    MKT --> CORE
+
+    subgraph CORE["⭐ CORE INNOVATION — turn an off-chain AI quality judgment into an operator-free, bilateral on-chain slash"]
+      direction TB
+      VV["independent STAKED validators — each a DISTINCT model (pro / flash / chat)<br/>each grades the delivery off-chain against the pre-committed criteria"]
+      VV -->|"commit → reveal (no one sees others' votes first)"| MED["calibration-weighted MEDIAN · ScalarResolverV10 · admin-keyless<br/><b>no operator sets the score</b>"]
+      MED --> SC["continuous score 0–100 → proportional payout"]
+    end
+
+    SC -->|"bad work"| O1["💸 seller bond SLASHED<br/>+ buyer refunded"]
+    SC -->|"good work + lying buyer"| O2["💸 lying buyer's dispute bond<br/>→ honest seller"]
+    SC -->|"validator off-consensus"| O3["⚖️ outlier validator SLASHED"]
+
+    classDef core fill:#fff3bf,stroke:#e8590c,stroke-width:4px,color:#111;
+    classDef reuse fill:#e7f5ff,stroke:#1c7ed6,color:#111;
+    classDef agent fill:#ebfbee,stroke:#2f9e44,color:#111;
+    class CORE core;
+    class MKT,ID reuse;
+    class B,S agent;
+```
+
+**The reused rails — x402 escrow, the bonded market, ERC-8004 discovery, Circle wallets — are plumbing.**
+The ⭐ box is the core innovation: a **subjective off-chain AI-quality judgment becomes objective, credibly-neutral,
+on-chain-enforced money** — decided by independent *staked* validators via commit-reveal (not an operator or an admin
+oracle), as a **continuous** score, with **bilateral** accountability (bad seller slashed · lying disputer slashed ·
+deviating validator slashed). Pre-committing `criteriaHash` fixes the rubric *before* delivery, so the question can't be
+re-litigated after the fact — the exact failure mode that broke a $60M UMA dispute in June 2026.
+
 ## Reused, already deployed on Arc Testnet (chain 5042002) — zero new Solidity
 
 | Piece | Address | Role |
