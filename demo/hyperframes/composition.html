@@ -1,0 +1,99 @@
+<!-- Bazaar demo — HyperFrames composition (STARTER: 3 representative beats; extend to all 13 from ../DEMO_SCRIPT.md).
+     Render: npx hyperframes render --output ../build/bazaar_demo_hf.mp4  (Node 22+, FFmpeg). Preview: npx hyperframes preview.
+     Visual grammar: dark mono terminal · GREEN=paid/protected, RED=slashed/forfeit, AMBER=twist · no on-camera person.
+     Data = the committed clean run (matches npm run verify 8/8). Target total <180s (≈155–165s). -->
+<div id="root" data-composition-id="bazaar" data-start="0" data-width="1920" data-height="1080"
+     style="position:relative;width:1920px;height:1080px;background:#0d0f12;color:#e7eaee;
+            font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;overflow:hidden;">
+
+  <style>
+    .clip{position:absolute;inset:0;}
+    .pad{position:absolute;inset:0;padding:80px 96px;box-sizing:border-box;}
+    .accent{color:#e8590c;} .green{color:#2f9e44;} .red{color:#e03131;} .amber{color:#f08c00;} .muted{color:#9aa3af;}
+    .card{position:absolute;border:2px solid #262b33;border-radius:18px;background:#15181d;}
+    .chip{position:absolute;left:96px;bottom:48px;font-size:24px;color:#9aa3af;
+          border:1px solid #262b33;border-radius:999px;padding:10px 20px;background:#15181d;}
+    .topbar{position:absolute;top:0;left:0;right:0;height:64px;background:#111418;border-bottom:1px solid #262b33;
+            display:flex;align-items:center;padding:0 40px;font-size:26px;color:#cfd6df;}
+    .stamp{position:absolute;border:5px solid #e03131;color:#e03131;font-weight:800;font-size:64px;
+           padding:10px 28px;border-radius:14px;transform:rotate(-9deg);}
+    .badge{display:inline-block;border-radius:999px;padding:6px 16px;font-size:26px;font-weight:700;border:2px solid;}
+  </style>
+
+  <!-- persistent top-bar claim strip (spans the whole video; update text per phase via GSAP if desired) -->
+  <div id="topbar" class="clip topbar" data-start="0" data-duration="165" data-track-index="0">
+    <span>Bazaar · proof-of-quality nanopayments on Arc · <span class="accent">verify, don't trust</span></span>
+  </div>
+
+  <!-- ============ SCENE 1 (0:00–0:13) — COLD OPEN: the real slash receipt ============ -->
+  <div id="s1" class="clip" data-start="0" data-duration="13" data-track-index="0">
+    <div class="pad" style="display:flex;flex-direction:column;justify-content:center;">
+      <div class="muted" style="font-size:30px;">Arc Testnet · chain 5042002 · testnet.arcscan.app</div>
+      <div id="s1card" class="card" style="left:96px;right:96px;top:300px;height:360px;padding:48px;">
+        <div style="font-size:40px;font-weight:700;">Bad AI work → seller's USDC bond <span class="red">SLASHED</span></div>
+        <div style="font-size:64px;margin-top:34px;">seller bond <span class="red">−0.019</span> &nbsp;→&nbsp; buyer <span class="green">+0.02925</span> <span style="font-size:34px;" class="muted">USDC</span></div>
+        <div class="muted" style="font-size:28px;margin-top:24px;">refund = 0.019 slashed bond + ~0.0103 escrow/dispute back &nbsp;·&nbsp; tx 0x58955ae2…</div>
+      </div>
+      <div id="s1stamp" class="stamp" style="right:180px;top:330px;">BOND SLASHED</div>
+    </div>
+  </div>
+
+  <!-- ============ SCENE 5 (≈0:44–0:58) — THE CORE INNOVATION ============ -->
+  <div id="s5" class="clip" data-start="44" data-duration="14" data-track-index="0" style="opacity:0;">
+    <div class="pad">
+      <div class="accent" style="font-size:40px;font-weight:800;">⭐ THE CORE — operator-free graded-resolution slash</div>
+      <div class="muted" style="font-size:28px;margin-top:8px;">an off-chain AI-quality judgment → operator-free, bilateral, on-chain money</div>
+      <div style="display:flex;gap:32px;margin-top:80px;">
+        <div class="card s5box" style="position:relative;flex:1;height:300px;padding:36px;border-color:#e8590c;">
+          <div style="font-size:32px;font-weight:700;">independent staked validators</div>
+          <div class="muted" style="font-size:26px;margin-top:16px;">each a distinct model (pro / flash / chat) — grade off-chain</div>
+        </div>
+        <div class="card s5box" style="position:relative;flex:1;height:300px;padding:36px;border-color:#e8590c;">
+          <div style="font-size:32px;font-weight:700;">commit → reveal</div>
+          <div class="muted" style="font-size:26px;margin-top:16px;">calibration-weighted MEDIAN · admin-keyless</div>
+          <div class="red" style="font-size:30px;font-weight:700;margin-top:18px;">no operator sets the score</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SCENE 13 (≈2:26–2:45) — FINALE: dashboard, badges flip green ============ -->
+  <div id="s13" class="clip" data-start="146" data-duration="19" data-track-index="0" style="opacity:0;">
+    <div class="pad">
+      <div style="font-size:44px;font-weight:800;">Verify, don't trust — <span class="accent">ccheh.github.io/bazaar</span></div>
+      <div id="s13sum" class="badge green" style="margin-top:24px;font-size:34px;">✅ 8/8 confirmed live on Arc Testnet</div>
+      <div style="margin-top:48px;display:grid;grid-template-columns:1fr 1fr;gap:22px;">
+        <!-- 8 evidence rows; badges animate from grey 'checking…' to green '✓ confirmed' (GSAP). -->
+        <div class="card hfrow" style="position:relative;padding:24px;"><b>BAD → bond slashed</b><div class="muted" style="font-size:22px;">0x58955ae2 · 5/100 · −0.019</div><span class="badge rb" style="border-color:#2f9e44;color:#2f9e44;font-size:22px;">✓ block 48,278,909</span></div>
+        <div class="card hfrow" style="position:relative;padding:24px;"><b>GOOD + lying buyer</b><div class="muted" style="font-size:22px;">0xe313a902 · 100/100 · liar −0.001</div><span class="badge rb" style="border-color:#2f9e44;color:#2f9e44;font-size:22px;">✓ block 48,278,916</span></div>
+        <div class="card hfrow" style="position:relative;padding:24px;"><b>Circle opens + disputes + refund</b><div class="muted" style="font-size:22px;">0x7c9b913b / 0xf7ea1cbb / 0xf9dadc5e</div><span class="badge rb" style="border-color:#2f9e44;color:#2f9e44;font-size:22px;">✓ confirmed</span></div>
+        <div class="card hfrow" style="position:relative;padding:24px;"><b>Circle pay · beginner · external</b><div class="muted" style="font-size:22px;">0x4c6db2f9 / 0x478a2402 / 0xac74ffee</div><span class="badge rb" style="border-color:#2f9e44;color:#2f9e44;font-size:22px;">✓ confirmed</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- lower-third tx-chip (example; swap text per scene with GSAP) -->
+  <div id="chip" class="chip" data-start="0" data-duration="165" data-track-index="0">github.com/Ccheh/bazaar · npm run verify</div>
+
+  <!-- VO: drop the per-sentence Edge-TTS clips from ../build/audio_sent (align data-start to each beat) -->
+  <!-- <audio data-start="0" data-duration="13" data-track-index="2" data-volume="1" src="../build/audio_sent/scene01.wav"></audio> -->
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script>
+    // Paused, seekable timeline — HyperFrames seeks it per frame. Times are absolute (seconds).
+    const tl = gsap.timeline({ paused: true });
+    // Scene 1: receipt card rises, then the SLASHED stamp snaps in.
+    tl.from("#s1card", { y: 40, opacity: 0, duration: 0.6 }, 0.1)
+      .from("#s1stamp", { scale: 2.2, opacity: 0, rotate: -30, duration: 0.4, ease: "back.out(2)" }, 0.9);
+    // Scene 5: fade in + stagger the two CORE boxes.
+    tl.to("#s5", { opacity: 1, duration: 0.4 }, 44)
+      .from(".s5box", { y: 30, opacity: 0, stagger: 0.25, duration: 0.5 }, 44.2)
+      .to("#s5", { opacity: 0, duration: 0.3 }, 57.7);
+    // Scene 13: fade in, summary pops, badges flip green in sequence.
+    tl.to("#s13", { opacity: 1, duration: 0.4 }, 146)
+      .from("#s13sum", { scale: 0.85, opacity: 0, duration: 0.5, ease: "back.out(2)" }, 146.3)
+      .from(".rb", { opacity: 0, x: 12, stagger: 0.35, duration: 0.4 }, 147);
+    window.__timelines = window.__timelines || {};
+    window.__timelines["bazaar"] = tl;
+  </script>
+</div>
