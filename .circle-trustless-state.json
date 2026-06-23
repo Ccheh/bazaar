@@ -22,5 +22,13 @@
   "marketId": "0x517cd82b031a45a6efa202589aad32819fe4565592d8f8c27536fffbf8ddfe9c",
   "nonce": "1782186751395",
   "opened": true,
-  "disputed": true
+  "disputed": true,
+  "outcome": {
+    "scoreBps": "0",
+    "bondSlashed": "20000000000000000",
+    "paidToAgent": "30790000000000000",
+    "txHash": "0xf9dadc5ea3babacb618ea7a4e4548692d9d8832b2705d2d192467161c3055ee3"
+  },
+  "openTx": "0x7c9b913b8b98e0234c07a50210e70368f5d76bb3ff218274648ffd98b216330f",
+  "disputeTx": "0xf7ea1cbb0ad4111a384e58d936782207b826a38beba4678a8cde36d1e43f4cd0"
 }

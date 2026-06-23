@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Bazaar — On-chain Evidence (verify, don't trust)</title>
+<style>
+  :root{
+    --bg:#0d0f12; --panel:#15181d; --line:#262b33; --text:#e7eaee; --muted:#9aa3af;
+    --accent:#e8590c; --ok:#2f9e44; --bad:#e03131; --link:#4dabf7;
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --bg:#f7f7f5; --panel:#ffffff; --line:#e3e3df; --text:#15181d; --muted:#6b7280; --link:#1c7ed6; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  .wrap{max-width:920px;margin:0 auto;padding:32px 20px 64px}
+  h1{font-size:26px;margin:0 0 6px}
+  .tag{color:var(--accent);font-weight:700;letter-spacing:.3px}
+  p.lead{color:var(--muted);margin:6px 0 18px;max-width:680px}
+  a{color:var(--link);text-decoration:none}a:hover{text-decoration:underline}
+  .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0 26px}
+  .summary{font-weight:700;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel)}
+  .pill{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:var(--panel)}
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:26px 0 10px}
+  h2.core{color:var(--accent)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:10px 0;display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+  .card.core{border-color:var(--accent);border-width:2px}
+  .txt{flex:1;min-width:240px}
+  .label{font-weight:700;margin:0 0 3px}
+  .detail{color:var(--muted);font-size:13.5px;margin:0}
+  .meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px}
+  .hash{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--muted)}
+  .badge{font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 10px;white-space:nowrap}
+  .b-ok{color:var(--ok);border:1px solid var(--ok)}
+  .b-pending{color:var(--muted);border:1px solid var(--line)}
+  .b-bad{color:var(--bad);border:1px solid var(--bad)}
+  .arc{font-size:12.5px;font-weight:700}
+  footer{margin-top:34px;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);padding-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Bazaar — <span class="tag">on-chain evidence</span></h1>
+  <p class="lead">Proof-of-quality nanopayments on Arc: an agent pays sub-cent USDC per call; bad AI work gets the seller's
+  USDC bond <b>slashed on-chain by an independent staked-validator consensus</b> (no operator); a lying buyer forfeits its own bond.
+  <b>This page calls Arc Testnet directly from your browser</b> (read-only JSON-RPC) to confirm every transaction below — no backend, no keys, no waiting. It's the web version of <code>npm&nbsp;run&nbsp;verify</code>.</p>
+  <div class="bar">
+    <span class="summary" id="summary">Checking on-chain…</span>
+    <span class="pill">Arc Testnet · chain 5042002</span>
+    <span class="pill"><a href="https://github.com/Ccheh/bazaar" target="_blank" rel="noopener">github.com/Ccheh/bazaar</a></span>
+  </div>
+  <div id="groups"></div>
+  <footer>
+    Read-only RPC: <span class="hash">rpc.testnet.arc.network</span> · explorer: <a href="https://testnet.arcscan.app" target="_blank" rel="noopener">arcscan.app</a>.
+    Each row is a real transaction you can open and check yourself. Honest scope (testnet; team-operated validators today) is in the
+    <a href="https://github.com/Ccheh/bazaar#trust-model--whats-real-vs-roadmap-honest" target="_blank" rel="noopener">repo trust model</a>.
+  </footer>
+</div>
+<script>
+const RPC="https://rpc.testnet.arc.network", EXPLORER="https://testnet.arcscan.app/tx/";
+const GROUPS=[
+  {name:"⭐ Trustless slash — staked validators decide, not the operator", core:true, items:[
+    {label:"Bad delivery → seller bond SLASHED", detail:"consensus 0/100 → seller bond slashed 0.02 USDC, buyer refunded 0.03079; deviating validator V3 itself slashed 0.00882.", tx:"0x5469f51c692717b14cedadd3a81bc754ae3821e1da8d6feab71684e9e125e4f3"},
+    {label:"Good delivery + LYING buyer → bond protected", detail:"consensus 100/100 → seller bond protected, the lying buyer forfeits its 0.001 dispute bond to the seller. A liar cannot slash an honest seller.", tx:"0x2d41152349c03415d7f9528a195c2f1d21d69c413109431a70ca093daa8642d1"},
+  ]},
+  {name:"Circle wallet THROUGH the bonded rail (load-bearing, not a side transfer)", items:[
+    {label:"Circle DCW opens the bonded market", detail:"a Circle Developer-Controlled wallet opens a CrucibleMarketV7 market via Circle's contract-execution API (Circle signs + broadcasts).", tx:"0x7c9b913b8b98e0234c07a50210e70368f5d76bb3ff218274648ffd98b216330f"},
+    {label:"Circle DCW disputes", detail:"the same Circle wallet files the dispute that triggers the validator vote.", tx:"0xf7ea1cbb0ad4111a384e58d936782207b826a38beba4678a8cde36d1e43f4cd0"},
+    {label:"Resolve → refund back to the Circle wallet", detail:"consensus 0/100 → seller bond slashed, 0.03079 USDC refunded to the Circle wallet — Circle funds flowed through the slash mechanism.", tx:"0xf9dadc5ea3babacb618ea7a4e4548692d9d8832b2705d2d192467161c3055ee3"},
+  ]},
+  {name:"Circle nanopayment + independent agents", items:[
+    {label:"Circle DCW sub-cent nanopayment", detail:"a Circle wallet pays a seller 0.002 USDC for real AI work — no SDK, raw REST + entity-secret ceremony.", tx:"0x4c6db2f95bcec0ff88a7578dda06228776527e5cd488a14a295b879c597c094f"},
+    {label:"Beginner agent (Claude) pays on-chain", detail:"a Claude-powered newcomer with its OWN wallet reasons like a first-timer and pays — the onboarding path a real person can run.", tx:"0x478a24023ea97b276b3c811e63efb18074a4009dfca7a01a550b915b6bd43803"},
+    {label:"Independent external agent pays a seller", detail:"a separately-keyed agent (not the main buyer) funds its own escrow and pays over the public rail.", tx:"0xac74ffeebb45f9760018916fb03196915184a075ed77b800a9218ad92cb4799a"},
+  ]},
+];
+let total=0, ok=0;
+const groupsEl=document.getElementById("groups"), summaryEl=document.getElementById("summary");
+for(const g of GROUPS){
+  const h=document.createElement("h2"); h.textContent=g.name; if(g.core)h.className="core"; groupsEl.appendChild(h);
+  for(const it of g.items){
+    total++;
+    const card=document.createElement("div"); card.className="card"+(g.core?" core":"");
+    card.innerHTML=`<div class="txt"><p class="label">${it.label}</p><p class="detail">${it.detail}</p>
+      <div class="meta"><span class="badge b-pending" data-tx="${it.tx}">checking…</span>
+      <span class="hash">${it.tx.slice(0,12)}…${it.tx.slice(-6)}</span>
+      <a class="arc" href="${EXPLORER}${it.tx}" target="_blank" rel="noopener">open on Arcscan ↗</a></div></div>`;
+    groupsEl.appendChild(card);
+    check(it.tx, card.querySelector(".badge"));
+  }
+}
+async function check(tx, badge){
+  try{
+    const ctl=new AbortController(); const to=setTimeout(()=>ctl.abort(),8000);
+    const r=await fetch(RPC,{method:"POST",headers:{"content-type":"application/json"},signal:ctl.signal,
+      body:JSON.stringify({jsonrpc:"2.0",id:1,method:"eth_getTransactionReceipt",params:[tx]})});
+    clearTimeout(to);
+    const j=await r.json();
+    const rc=j.result;
+    if(rc && rc.status==="0x1"){
+      const blk=parseInt(rc.blockNumber,16);
+      badge.className="badge b-ok"; badge.textContent=`✓ confirmed · block ${blk.toLocaleString()}`;
+      ok++; updateSummary();
+    } else if(rc && rc.status==="0x0"){
+      badge.className="badge b-bad"; badge.textContent="✗ reverted"; updateSummary();
+    } else { badge.className="badge b-pending"; badge.textContent="not found — open on Arcscan"; }
+  }catch(e){ badge.className="badge b-pending"; badge.textContent="RPC blocked — open on Arcscan"; }
+}
+function updateSummary(){
+  summaryEl.textContent = ok===total ? `✅ ${ok}/${total} confirmed live on Arc Testnet` : `✓ ${ok}/${total} confirmed on Arc Testnet…`;
+}
+</script>
+</body>
+</html>

@@ -17,3 +17,5 @@ pending-claims.jsonl
 circle-entity-secret.txt
 circle-recovery.dat
 *.secret
+
+.claude/
