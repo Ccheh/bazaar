@@ -2,7 +2,7 @@
 
 **Checklist (forms.gle):**
 - [x] Public GitHub repo — https://github.com/Ccheh/bazaar (clone runs; `npm run verify` = 8/8 on-chain)
-- [ ] **Demo video link** (<3 min) — upload `demo/build/bazaar_demo_hf.mp4` (2:35) to YouTube *unlisted* or Vimeo, paste the URL here + in the form + in README
+- [x] **Demo video link** (<3 min): **https://youtu.be/loRvV3yG28c** — YouTube *unlisted*, 2:35 (also in README)
 - [ ] **Traction questionnaire** — paste the answer below
 - [ ] (optional, highest-leverage) one genuine third-party tx — have someone outside the team run `npm run byoa` with their own wallet+key and pay a seller; add that tx
 
