@@ -272,8 +272,12 @@ async function main() {
     log("generating real deliveries (good seller + lazy seller)…");
     const good = await doWork("analyst", TASK, false);
     const bad = await doWork("cheapbot", TASK, true);
-    const goodText = good.output ?? `${good.summary} ${(good.points ?? []).join("; ")}`;
-    const badText = bad.output ?? bad.summary ?? "Rollups are good. Use them.";
+    // Canned fallbacks guarantee a SUBSTANTIVE good answer + a genuinely-lazy bad answer even if the
+    // (thinking-model) LLM returns empty — so the headline slash never rests on an empty/undefined delivery.
+    const GOOD_FALLBACK = "Optimistic rollups assume transactions are valid and rely on a fraud-proof challenge window — cheap to post, but finality/withdrawals are slow (days). ZK rollups post a validity proof for every batch — near-instant finality and trustless withdrawals, but proof generation is computationally expensive. Optimistic rollups are simpler and more EVM-compatible today; ZK rollups have stronger security assumptions but heavier tooling and longer ecosystem maturity.";
+    const BAD_FALLBACK = "Rollups are good, just use whichever one — they're all basically the same thing honestly.";
+    const goodText = (good.output && good.output.trim()) || GOOD_FALLBACK;
+    const badText = (bad.output && bad.output.trim()) || BAD_FALLBACK;
     const base = Date.now();
     state.markets.BAD ??= { label: "BAD", scenario: "lazy seller, justified dispute", delivery: badText, nonce: String(base + 1), votes: {} };
     state.markets.GOOD ??= { label: "GOOD", scenario: "honest seller, a LYING buyer disputes good work", delivery: goodText, nonce: String(base + 2), votes: {} };

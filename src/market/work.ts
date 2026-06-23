@@ -16,8 +16,10 @@ export async function doWork(name: string, task: string, lazy: boolean): Promise
   const system = lazy
     ? `You are a lazy, low-effort service. Reply with ONE short, vague sentence and do NOT actually complete the task.`
     : `You are "${name}", a careful expert service. Complete the user's task accurately and concisely as 3 short bullet points. No preamble.`;
-  const out = await askLLM(system, task, { maxTokens: lazy ? 80 : 500 });
-  if (out !== null) {
+  // Generous caps: deepseek-v4-pro is a thinking model — a small cap lets the reasoning chain eat the
+  // budget and truncate the final answer to empty. The prompt (not the cap) keeps the lazy one terse.
+  const out = await askLLM(system, task, { maxTokens: lazy ? 400 : 1500 });
+  if (out !== null && out.trim() !== "") {
     return { quality: lazy ? "low-effort" : "full", service: name, output: out.trim() };
   }
   // No LLM key available — deterministic stand-ins so the on-chain loop still runs.
