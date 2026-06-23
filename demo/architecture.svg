@@ -1,0 +1,80 @@
+<svg viewBox="0 0 840 620" xmlns="http://www.w3.org/2000/svg" role="img" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <title>Bazaar architecture — the core innovation is the operator-free graded-resolution slash</title>
+  <desc>Buyer pays a seller sub-cent USDC over the reused x402 rail and discovers sellers via ERC-8004; the seller stakes a USDC bond on the reused CrucibleMarket; on dispute, the core innovation — independent staked validators grading off-chain, commit-reveal, calibration-weighted median with no operator — produces a continuous score that slashes the bad seller, the lying buyer, or a deviating validator.</desc>
+  <rect x="0" y="0" width="840" height="620" fill="#ffffff"/>
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#444" fill-opacity="0.7"/>
+    </marker>
+    <style>
+      .box{fill:#f4f5f6;stroke:#5b6470;stroke-width:1.5;}
+      .lbl{fill:#15181d;font-weight:700;}
+      .sub{fill:#5b6470;font-size:12px;}
+      .edge{stroke:#5b6470;stroke-width:1.5;fill:none;}
+      .edgelbl{fill:#3a4049;font-size:11.5px;}
+      .core{fill:#fff3bf;stroke:#e8590c;stroke-width:3;}
+      .coretitle{fill:#e8590c;font-weight:800;}
+      .mini{fill:#ffe8cc;stroke:#e8590c;stroke-opacity:.55;stroke-width:1.5;}
+      .slash{fill:#ffe3e3;stroke:#e03131;stroke-opacity:.6;stroke-width:1.5;}
+      .slashlbl{fill:#e03131;font-weight:700;font-size:12.5px;}
+      .amber{fill:#fff3bf;stroke:#f08c00;stroke-opacity:.7;}
+      .amberlbl{fill:#e8590c;font-weight:700;font-size:12.5px;}
+    </style>
+  </defs>
+  <rect class="box" x="36" y="28" width="210" height="58" rx="10"/>
+  <text class="lbl" x="141" y="52" font-size="14" text-anchor="middle">Buyer agent</text>
+  <text class="sub" x="141" y="71" text-anchor="middle">(can be a Circle wallet)</text>
+  <rect class="box" x="470" y="28" width="190" height="58" rx="10"/>
+  <text class="lbl" x="565" y="52" font-size="14" text-anchor="middle">Seller agent</text>
+  <text class="sub" x="565" y="71" text-anchor="middle">real LLM work</text>
+  <rect class="box" x="690" y="28" width="120" height="58" rx="10"/>
+  <text class="lbl" x="750" y="50" font-size="12.5" text-anchor="middle">ERC-8004</text>
+  <text class="sub" x="750" y="68" text-anchor="middle">discovery</text>
+  <path class="edge" d="M246 44 Q500 8 690 44" marker-end="url(#ah)"/>
+  <text class="edgelbl" x="468" y="20" text-anchor="middle">① discover sellers on-chain</text>
+  <path class="edge" d="M246 57 L470 57" marker-end="url(#ah)"/>
+  <text class="edgelbl" x="358" y="50" text-anchor="middle">② pay sub-cent USDC / call · x402 (reused)</text>
+  <rect class="box" x="300" y="120" width="260" height="50" rx="10"/>
+  <text class="lbl" x="430" y="142" font-size="13.5" text-anchor="middle">CrucibleMarketV7</text>
+  <text class="sub" x="430" y="159" text-anchor="middle">bonded escrow · reused</text>
+  <path class="edge" d="M565 86 L490 120" marker-end="url(#ah)"/>
+  <text class="edgelbl" x="600" y="106" text-anchor="middle">③ stake bond + criteriaHash</text>
+  <path class="edge" d="M141 86 L300 132" marker-end="url(#ah)"/>
+  <text class="edgelbl" x="150" y="112" text-anchor="middle">④ dispute (+ bond)</text>
+  <path class="edge" d="M430 170 L430 206" marker-end="url(#ah)"/>
+  <rect class="core" x="36" y="208" width="774" height="184" rx="14"/>
+  <text class="coretitle" x="423" y="234" font-size="15" text-anchor="middle">⭐ THE CORE INNOVATION</text>
+  <text class="sub" x="423" y="254" font-size="12.5" text-anchor="middle">an off-chain AI-quality judgment → an operator-free, bilateral, on-chain slash</text>
+  <rect class="mini" x="70" y="272" width="210" height="92" rx="10"/>
+  <text class="lbl" x="175" y="304" font-size="12.5" text-anchor="middle">independent staked</text>
+  <text class="lbl" x="175" y="321" font-size="12.5" text-anchor="middle">validators</text>
+  <text class="sub" x="175" y="342" text-anchor="middle">each a distinct model</text>
+  <text class="sub" x="175" y="357" text-anchor="middle">grade off-chain</text>
+  <rect class="mini" x="316" y="272" width="190" height="92" rx="10"/>
+  <text class="lbl" x="411" y="312" font-size="12.5" text-anchor="middle">commit → reveal</text>
+  <text class="sub" x="411" y="333" text-anchor="middle">no one sees</text>
+  <text class="sub" x="411" y="348" text-anchor="middle">others first</text>
+  <rect class="mini" x="542" y="272" width="234" height="92" rx="10"/>
+  <text class="lbl" x="659" y="300" font-size="12.5" text-anchor="middle">calibration-weighted</text>
+  <text class="lbl" x="659" y="317" font-size="12.5" text-anchor="middle">MEDIAN → score 0–100</text>
+  <text class="slashlbl" x="659" y="340" font-size="12" text-anchor="middle">NO operator sets it</text>
+  <text class="sub" x="659" y="356" text-anchor="middle">admin-keyless resolver</text>
+  <path class="edge" d="M280 318 L316 318" marker-end="url(#ah)"/>
+  <path class="edge" d="M506 318 L542 318" marker-end="url(#ah)"/>
+  <path class="edge" d="M423 392 L423 430" marker-end="url(#ah)"/>
+  <rect class="slash" x="36" y="432" width="244" height="58" rx="10"/>
+  <text class="slashlbl" x="158" y="457" text-anchor="middle">bad work →</text>
+  <text class="slashlbl" x="158" y="476" text-anchor="middle">seller bond slashed + refund</text>
+  <rect class="slash" x="298" y="432" width="244" height="58" rx="10"/>
+  <text class="slashlbl" x="420" y="457" text-anchor="middle">lying buyer →</text>
+  <text class="slashlbl" x="420" y="476" text-anchor="middle">forfeits bond to seller</text>
+  <rect class="amber" x="560" y="432" width="250" height="58" rx="10" stroke-width="1.5"/>
+  <text class="amberlbl" x="685" y="457" text-anchor="middle">off-consensus →</text>
+  <text class="amberlbl" x="685" y="476" text-anchor="middle">validator itself slashed</text>
+  <rect x="36" y="556" width="16" height="16" rx="3" class="box"/>
+  <text class="sub" x="60" y="569">reused infra (rails, market, identity)</text>
+  <rect x="300" y="556" width="16" height="16" rx="3" fill="#fff3bf" stroke="#e8590c" stroke-width="2.5"/>
+  <text class="sub" x="324" y="569">⭐ the core innovation</text>
+  <rect x="486" y="556" width="16" height="16" rx="3" fill="#ffe3e3" stroke="#e03131" stroke-width="1.5"/>
+  <text class="sub" x="510" y="569">on-chain slash / forfeit</text>
+</svg>

@@ -19,3 +19,6 @@ circle-recovery.dat
 *.secret
 
 .claude/
+
+# generated demo rough-cut artifacts (large binaries)
+demo/build/
