@@ -1,7 +1,7 @@
 # Bazaar — Demo Video Cut Sheet (for Codex editing)
 
 **Format:** screen-recording + voiceover ONLY — **no person on camera** (founder credit is a text lower-third).
-**Length:** target **2:49** — HARD cap **< 3:00** (Lepton rejects over). Durations below sum to 169s.
+**Length:** final render **2:35** (155.09s) — HARD cap **< 3:00** (Lepton rejects over). Final composition renders to 155.09s = 2:35 (under cap).
 **Spine:** PROOF-FIRST — open on a real on-chain slash tx, frame everything as independently verifiable, close on `npm run verify`.
 **Hook (first words, no logo splash):** *"This is a real transaction on Arc. A seller just lost its USDC bond for bad AI work — and nobody at our company decided that. The chain did."*
 

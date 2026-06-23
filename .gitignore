@@ -22,3 +22,9 @@ circle-recovery.dat
 
 # generated demo rough-cut artifacts (large binaries)
 demo/build/
+
+# HyperFrames render runtime + heavy generated assets (deliverable is the uploaded mp4)
+demo/hyperframes/.tools/
+demo/hyperframes/.render/
+demo/hyperframes/vo/
+demo/hyperframes/node_modules/

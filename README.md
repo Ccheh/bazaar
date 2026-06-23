@@ -16,6 +16,8 @@ the buyer is refunded. No middleman holds funds or arbitrates — the chain enfo
 
 A **Lepton Agents Hackathon** project (Canteen × Circle × Arc, Jun 2026).
 
+> 🎬 **Demo video (2:35):** _add unlisted YouTube/Vimeo link here before submitting_ &nbsp;·&nbsp; submission notes in [SUBMISSION.md](SUBMISSION.md)
+>
 > 🔎 **[Live evidence dashboard → ccheh.github.io/bazaar](https://ccheh.github.io/bazaar/)** — opens in your
 > browser and calls Arc Testnet directly (read-only) to confirm every slash/payment transaction live, with
 > Arcscan links. No install, no keys, no waiting — the web version of `npm run verify`.

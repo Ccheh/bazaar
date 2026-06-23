@@ -1,99 +1,667 @@
-<!-- Bazaar demo — HyperFrames composition (STARTER: 3 representative beats; extend to all 13 from ../DEMO_SCRIPT.md).
-     Render: npx hyperframes render --output ../build/bazaar_demo_hf.mp4  (Node 22+, FFmpeg). Preview: npx hyperframes preview.
-     Visual grammar: dark mono terminal · GREEN=paid/protected, RED=slashed/forfeit, AMBER=twist · no on-camera person.
-     Data = the committed clean run (matches npm run verify 8/8). Target total <180s (≈155–165s). -->
-<div id="root" data-composition-id="bazaar" data-start="0" data-width="1920" data-height="1080"
-     style="position:relative;width:1920px;height:1080px;background:#0d0f12;color:#e7eaee;
-            font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;overflow:hidden;">
-
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Bazaar Hackathon Demo</title>
+</head>
+<body>
+<!-- Bazaar hackathon demo - HyperFrames composition.
+     Pinned local runtime: hyperframes@0.7.3, gsap@3.12.5.
+     Visual grammar: dark terminal, GREEN paid/protected, RED slashed/forfeit, AMBER twist.
+     Guardrails: no on-camera person, human-readable USDC, V3 is a forced outlier, Circle full loop shown. -->
+<div id="root" data-composition-id="bazaar" data-start="0" data-duration="155.09" data-width="1920" data-height="1080">
   <style>
-    .clip{position:absolute;inset:0;}
-    .pad{position:absolute;inset:0;padding:80px 96px;box-sizing:border-box;}
-    .accent{color:#e8590c;} .green{color:#2f9e44;} .red{color:#e03131;} .amber{color:#f08c00;} .muted{color:#9aa3af;}
-    .card{position:absolute;border:2px solid #262b33;border-radius:18px;background:#15181d;}
-    .chip{position:absolute;left:96px;bottom:48px;font-size:24px;color:#9aa3af;
-          border:1px solid #262b33;border-radius:999px;padding:10px 20px;background:#15181d;}
-    .topbar{position:absolute;top:0;left:0;right:0;height:64px;background:#111418;border-bottom:1px solid #262b33;
-            display:flex;align-items:center;padding:0 40px;font-size:26px;color:#cfd6df;}
-    .stamp{position:absolute;border:5px solid #e03131;color:#e03131;font-weight:800;font-size:64px;
-           padding:10px 28px;border-radius:14px;transform:rotate(-9deg);}
-    .badge{display:inline-block;border-radius:999px;padding:6px 16px;font-size:26px;font-weight:700;border:2px solid;}
+    :root {
+      --bg: #0a0d10;
+      --panel: #12161c;
+      --panel-2: #171c23;
+      --line: #2a313b;
+      --text: #edf2f7;
+      --muted: #9aa6b2;
+      --green: #2f9e44;
+      --red: #e03131;
+      --amber: #f08c00;
+      --blue: #4dabf7;
+    }
+    * { box-sizing: border-box; letter-spacing: 0; }
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+    }
+    #root {
+      position: relative;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px) 0 0 / 64px 64px,
+        linear-gradient(0deg, rgba(255,255,255,0.018) 1px, transparent 1px) 0 0 / 64px 64px,
+        var(--bg);
+      color: var(--text);
+      font-family: ui-monospace, monospace;
+    }
+    .clip, .beat {
+      position: absolute;
+      inset: 0;
+    }
+    .beat {
+      opacity: 0;
+      visibility: hidden;
+      padding: 86px 96px 82px;
+    }
+    .topbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      border-bottom: 1px solid var(--line);
+      background: #0f1318;
+      color: #cfd7df;
+      font-size: 23px;
+    }
+    .brand { color: var(--amber); font-weight: 800; }
+    .caption {
+      position: absolute;
+      left: 96px;
+      right: 96px;
+      bottom: 28px;
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: #d7dee6;
+      font-size: 25px;
+      line-height: 1.25;
+      border-top: 1px solid rgba(154,166,178,0.25);
+      padding-top: 16px;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex: none;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 14px;
+      background: #11161c;
+      color: var(--muted);
+      font-size: 18px;
+      white-space: nowrap;
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .panel {
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      background: rgba(18,22,28,0.96);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.28);
+    }
+    .terminal {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #0c1015;
+      overflow: hidden;
+    }
+    .terminal-head {
+      height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 18px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 17px;
+      background: #12161c;
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+    .dot.red { background: var(--red); }
+    .dot.amber { background: var(--amber); }
+    .dot.green { background: var(--green); }
+    .terminal-body { padding: 24px; }
+    .h1 {
+      font-size: 58px;
+      line-height: 1.08;
+      font-weight: 850;
+      margin: 0 0 26px;
+    }
+    .h2 {
+      font-size: 40px;
+      line-height: 1.1;
+      font-weight: 800;
+      margin: 0 0 18px;
+    }
+    .h3 {
+      font-size: 28px;
+      line-height: 1.2;
+      font-weight: 800;
+      margin: 0 0 12px;
+    }
+    .body {
+      color: #d8dfe7;
+      font-size: 25px;
+      line-height: 1.36;
+    }
+    .muted { color: var(--muted); }
+    .green { color: var(--green); }
+    .red { color: var(--red); }
+    .amber { color: var(--amber); }
+    .blue { color: var(--blue); }
+    .mono { font-family: ui-monospace, monospace; }
+    .hash {
+      color: #c8d1dc;
+      font-size: 17px;
+      line-height: 1.25;
+      word-break: break-all;
+    }
+    .big-number {
+      font-size: 58px;
+      line-height: 1;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 2px solid currentColor;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-weight: 800;
+      font-size: 19px;
+      line-height: 1;
+      white-space: nowrap;
+      background: rgba(255,255,255,0.03);
+    }
+    .receipt {
+      position: absolute;
+      left: 86px;
+      right: 86px;
+      top: 112px;
+      bottom: 104px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+    .receipt-row {
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      gap: 26px;
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(154,166,178,0.18);
+      font-size: 24px;
+    }
+    .stamp {
+      position: absolute;
+      right: 152px;
+      top: 360px;
+      border: 6px solid var(--red);
+      border-radius: 8px;
+      color: var(--red);
+      font-size: 64px;
+      font-weight: 900;
+      padding: 14px 28px;
+      transform: rotate(-8deg);
+      background: rgba(10,13,16,0.7);
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: 1fr 62px 1fr 62px 1fr;
+      align-items: center;
+      gap: 14px;
+    }
+    .arrow {
+      height: 2px;
+      background: var(--line);
+      position: relative;
+    }
+    .arrow::after {
+      content: "";
+      position: absolute;
+      right: -2px;
+      top: -5px;
+      border-left: 10px solid var(--line);
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+    }
+    .vote-row, .dash-row {
+      display: grid;
+      align-items: center;
+      gap: 18px;
+      border-bottom: 1px solid rgba(154,166,178,0.16);
+      padding: 14px 0;
+    }
+    .vote-row { grid-template-columns: 110px 1fr 120px; }
+    .dash-row { grid-template-columns: 310px 1fr 250px; }
+    .bar {
+      height: 20px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #242b33;
+    }
+    .fill {
+      height: 100%;
+      width: var(--w);
+      background: currentColor;
+    }
+    .mini {
+      font-size: 18px;
+      line-height: 1.3;
+    }
+    .scope-list {
+      display: grid;
+      gap: 16px;
+      margin-top: 28px;
+      font-size: 27px;
+      line-height: 1.35;
+    }
+    .scope-item {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+    .core-box {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 1px rgba(240,140,0,0.16), 0 26px 80px rgba(240,140,0,0.08);
+    }
+    .arch-img {
+      width: 100%;
+      height: 560px;
+      object-fit: contain;
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 24px;
+    }
   </style>
 
-  <!-- persistent top-bar claim strip (spans the whole video; update text per phase via GSAP if desired) -->
-  <div id="topbar" class="clip topbar" data-start="0" data-duration="165" data-track-index="0">
-    <span>Bazaar · proof-of-quality nanopayments on Arc · <span class="accent">verify, don't trust</span></span>
-  </div>
-
-  <!-- ============ SCENE 1 (0:00–0:13) — COLD OPEN: the real slash receipt ============ -->
-  <div id="s1" class="clip" data-start="0" data-duration="13" data-track-index="0">
-    <div class="pad" style="display:flex;flex-direction:column;justify-content:center;">
-      <div class="muted" style="font-size:30px;">Arc Testnet · chain 5042002 · testnet.arcscan.app</div>
-      <div id="s1card" class="card" style="left:96px;right:96px;top:300px;height:360px;padding:48px;">
-        <div style="font-size:40px;font-weight:700;">Bad AI work → seller's USDC bond <span class="red">SLASHED</span></div>
-        <div style="font-size:64px;margin-top:34px;">seller bond <span class="red">−0.019</span> &nbsp;→&nbsp; buyer <span class="green">+0.02925</span> <span style="font-size:34px;" class="muted">USDC</span></div>
-        <div class="muted" style="font-size:28px;margin-top:24px;">refund = 0.019 slashed bond + ~0.0103 escrow/dispute back &nbsp;·&nbsp; tx 0x58955ae2…</div>
+  <section id="s1" class="clip beat" data-start="0.00" data-duration="10.42" data-track-index="0">
+    <div class="topbar"><span><span class="brand">Bazaar</span> / Arcscan receipt</span><span>Arc Testnet · chain 5042002</span></div>
+    <div class="receipt panel">
+      <div class="terminal-head"><span class="dot green"></span><span>testnet.arcscan.app / tx</span><span class="badge green">Status: Success</span></div>
+      <div class="terminal-body">
+        <div class="h1">A seller just lost its USDC bond for bad AI work.</div>
+        <div class="receipt-row"><div class="muted">Transaction hash</div><div class="hash">0x58955ae21a4392721d59b75c8a144874b5457e1ff8b57013fb08bdb1cec9bafb</div></div>
+        <div class="receipt-row"><div class="muted">Block</div><div>48,278,909</div></div>
+        <div class="receipt-row"><div class="muted">Settlement</div><div><span class="red">seller bond -0.019 USDC</span> → <span class="green">buyer +0.02925 USDC</span></div></div>
+        <div class="receipt-row"><div class="muted">Reconciliation</div><div>buyer refund 0.02925 = 0.019 slashed bond + ~0.0103 escrow & dispute deposit back</div></div>
       </div>
-      <div id="s1stamp" class="stamp" style="right:180px;top:330px;">BOND SLASHED</div>
+      <div class="terminal-body muted mini">No platform operator set this score. The contract did.</div>
     </div>
-  </div>
+    <div class="stamp">BOND SLASHED</div>
+    <div class="caption"><span class="chip">tx 0x58955ae2 · block 48,278,909</span>REAL on-chain slash · seller bond -0.019 → buyer +0.02925</div>
+  </section>
 
-  <!-- ============ SCENE 5 (≈0:44–0:58) — THE CORE INNOVATION ============ -->
-  <div id="s5" class="clip" data-start="44" data-duration="14" data-track-index="0" style="opacity:0;">
-    <div class="pad">
-      <div class="accent" style="font-size:40px;font-weight:800;">⭐ THE CORE — operator-free graded-resolution slash</div>
-      <div class="muted" style="font-size:28px;margin-top:8px;">an off-chain AI-quality judgment → operator-free, bilateral, on-chain money</div>
-      <div style="display:flex;gap:32px;margin-top:80px;">
-        <div class="card s5box" style="position:relative;flex:1;height:300px;padding:36px;border-color:#e8590c;">
-          <div style="font-size:32px;font-weight:700;">independent staked validators</div>
-          <div class="muted" style="font-size:26px;margin-top:16px;">each a distinct model (pro / flash / chat) — grade off-chain</div>
-        </div>
-        <div class="card s5box" style="position:relative;flex:1;height:300px;padding:36px;border-color:#e8590c;">
-          <div style="font-size:32px;font-weight:700;">commit → reveal</div>
-          <div class="muted" style="font-size:26px;margin-top:16px;">calibration-weighted MEDIAN · admin-keyless</div>
-          <div class="red" style="font-size:30px;font-weight:700;margin-top:18px;">no operator sets the score</div>
+  <section id="s2" class="clip beat" data-start="10.42" data-duration="10.60" data-track-index="0">
+    <div class="topbar"><span><span class="brand">Bazaar</span> / problem</span><span>USDC should move without a human referee</span></div>
+    <div class="grid-3" style="margin-top:126px;">
+      <div class="panel terminal s2-card">
+        <div class="terminal-head"><span class="dot amber"></span>buyer</div>
+        <div class="terminal-body">
+          <div class="h3">I need output quality.</div>
+          <div class="body muted">But AI work is subjective until someone reads it.</div>
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- ============ SCENE 13 (≈2:26–2:45) — FINALE: dashboard, badges flip green ============ -->
-  <div id="s13" class="clip" data-start="146" data-duration="19" data-track-index="0" style="opacity:0;">
-    <div class="pad">
-      <div style="font-size:44px;font-weight:800;">Verify, don't trust — <span class="accent">ccheh.github.io/bazaar</span></div>
-      <div id="s13sum" class="badge green" style="margin-top:24px;font-size:34px;">✅ 8/8 confirmed live on Arc Testnet</div>
-      <div style="margin-top:48px;display:grid;grid-template-columns:1fr 1fr;gap:22px;">
-        <!-- 8 evidence rows; badges animate from grey 'checking…' to green '✓ confirmed' (GSAP). -->
-        <div class="card hfrow" style="position:relative;padding:24px;"><b>BAD → bond slashed</b><div class="muted" style="font-size:22px;">0x58955ae2 · 5/100 · −0.019</div><span class="badge rb" style="border-color:#2f9e44;color:#2f9e44;font-size:22px;">✓ block 48,278,909</span></div>
-        <div class="card hfrow" style="position:relative;padding:24px;"><b>GOOD + lying buyer</b><div class="muted" style="font-size:22px;">0xe313a902 · 100/100 · liar −0.001</div><span class="badge rb" style="border-color:#2f9e44;color:#2f9e44;font-size:22px;">✓ block 48,278,916</span></div>
-        <div class="card hfrow" style="position:relative;padding:24px;"><b>Circle opens + disputes + refund</b><div class="muted" style="font-size:22px;">0x7c9b913b / 0xf7ea1cbb / 0xf9dadc5e</div><span class="badge rb" style="border-color:#2f9e44;color:#2f9e44;font-size:22px;">✓ confirmed</span></div>
-        <div class="card hfrow" style="position:relative;padding:24px;"><b>Circle pay · beginner · external</b><div class="muted" style="font-size:22px;">0x4c6db2f9 / 0x478a2402 / 0xac74ffee</div><span class="badge rb" style="border-color:#2f9e44;color:#2f9e44;font-size:22px;">✓ confirmed</span></div>
+      <div class="panel terminal s2-card">
+        <div class="terminal-head"><span class="dot green"></span>seller</div>
+        <div class="terminal-body">
+          <div class="h3">I need fast payout.</div>
+          <div class="body muted">A tiny job cannot wait on a ticket queue.</div>
+        </div>
+      </div>
+      <div class="panel terminal s2-card">
+        <div class="terminal-head"><span class="dot red"></span>platform</div>
+        <div class="terminal-body">
+          <div class="h3">I should not be judge.</div>
+          <div class="body muted">If we touch the decision, the rail is custodial in spirit.</div>
+        </div>
       </div>
     </div>
-  </div>
+    <div class="panel" style="margin-top:42px;padding:34px 42px;">
+      <div class="flow">
+        <div><div class="muted">buyer escrow</div><div class="big-number green">USDC</div></div>
+        <div class="arrow"></div>
+        <div><div class="muted">AI delivery</div><div class="big-number amber">quality?</div></div>
+        <div class="arrow"></div>
+        <div><div class="muted">settlement</div><div class="big-number">who decides?</div></div>
+      </div>
+    </div>
+    <div class="caption"><span class="chip">design constraint</span>USDC should move only after quality is proven.</div>
+  </section>
 
-  <!-- lower-third tx-chip (example; swap text per scene with GSAP) -->
-  <div id="chip" class="chip" data-start="0" data-duration="165" data-track-index="0">github.com/Ccheh/bazaar · npm run verify</div>
+  <section id="s3" class="clip beat" data-start="21.02" data-duration="9.96" data-track-index="0">
+    <div class="topbar"><span><span class="brand">Bazaar</span> / same prompt, different work</span><span>one-line answer vs real answer</span></div>
+    <div class="terminal" style="margin-top:96px;">
+      <div class="terminal-head"><span class="dot green"></span><span>task</span></div>
+      <div class="terminal-body body">Explain the main trade-offs between optimistic and ZK rollups in 3 concise bullet points.</div>
+    </div>
+    <div class="grid-2" style="margin-top:32px;">
+      <div class="panel terminal s3-card" style="border-color:rgba(224,49,49,0.7);">
+        <div class="terminal-head"><span class="dot red"></span>BAD delivery</div>
+        <div class="terminal-body">
+          <div class="body red">"They each have their own strengths, so it depends."</div>
+          <div class="scope-list mini">
+            <div class="scope-item"><span class="red">x</span><span>no concrete trade-offs</span></div>
+            <div class="scope-item"><span class="red">x</span><span>no finality / cost / compatibility contrast</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel terminal s3-card" style="border-color:rgba(47,158,68,0.75);">
+        <div class="terminal-head"><span class="dot green"></span>GOOD delivery</div>
+        <div class="terminal-body body">
+          <div><span class="green">✓</span> finality: fraud window vs validity proof</div>
+          <div><span class="green">✓</span> cost: calldata simplicity vs proof generation</div>
+          <div><span class="green">✓</span> EVM: compatibility vs cryptographic complexity</div>
+        </div>
+      </div>
+    </div>
+    <div class="caption"><span class="chip">same prompt</span>Vague answer should lose. Good answer should be protected.</div>
+  </section>
 
-  <!-- VO: drop the per-sentence Edge-TTS clips from ../build/audio_sent (align data-start to each beat) -->
-  <!-- <audio data-start="0" data-duration="13" data-track-index="2" data-volume="1" src="../build/audio_sent/scene01.wav"></audio> -->
+  <section id="s4" class="clip beat" data-start="30.99" data-duration="11.86" data-track-index="0">
+    <div class="topbar"><span><span class="brand">Bazaar</span> / architecture</span><span>off-chain judgment, on-chain settlement</span></div>
+    <div class="grid-2" style="margin-top:88px;align-items:start;">
+      <div class="panel terminal s4-left">
+        <div class="terminal-head"><span class="dot amber"></span>claim</div>
+        <div class="terminal-body">
+          <div class="h2">AI quality becomes a signed, stake-backed number.</div>
+          <div class="body muted">Validators grade off-chain, reveal on-chain, and the contract moves USDC by rule.</div>
+          <div class="scope-list">
+            <div class="scope-item"><span class="green">1</span><span>buyer opens bonded market</span></div>
+            <div class="scope-item"><span class="green">2</span><span>seller delivers AI output</span></div>
+            <div class="scope-item"><span class="green">3</span><span>validators commit, reveal, and are accountable</span></div>
+            <div class="scope-item"><span class="green">4</span><span>contract pays, refunds, or slashes</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="s4-arch">
+        <img class="arch-img" src="media/architecture.svg" alt="Bazaar architecture diagram">
+      </div>
+    </div>
+    <div class="caption"><span class="chip">native asset</span>The platform is not the referee; the mechanism is.</div>
+  </section>
 
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <section id="s5" class="clip beat" data-start="42.85" data-duration="12.01" data-track-index="0">
+    <div class="topbar"><span><span class="brand">Bazaar</span> / core innovation</span><span>operator-free graded-resolution slash</span></div>
+    <div class="panel core-box" style="margin:104px auto 0;max-width:1330px;padding:46px 56px;">
+      <div class="h1 amber">⭐ CORE</div>
+      <div class="h2">Off-chain AI-quality judgment → bilateral, on-chain money movement.</div>
+      <div class="grid-3" style="margin-top:34px;">
+        <div class="terminal core-step">
+          <div class="terminal-head"><span class="dot amber"></span>validators</div>
+          <div class="terminal-body body">distinct models grade independently</div>
+        </div>
+        <div class="terminal core-step">
+          <div class="terminal-head"><span class="dot amber"></span>commit / reveal</div>
+          <div class="terminal-body body">calibration-weighted median; no operator score</div>
+        </div>
+        <div class="terminal core-step">
+          <div class="terminal-head"><span class="dot amber"></span>settlement</div>
+          <div class="terminal-body body">USDC paid, protected, refunded, or slashed</div>
+        </div>
+      </div>
+    </div>
+    <div class="caption"><span class="chip">≤ 1 term: slash</span>AI judges produce a number. The contract turns that number into money.</div>
+  </section>
+
+  <section id="s6" class="clip beat" data-start="54.87" data-duration="11.90" data-track-index="0">
+    <div class="topbar"><span><span class="brand">Bazaar</span> / bad work resolved</span><span>same tx as cold open</span></div>
+    <div class="grid-2" style="margin-top:96px;align-items:start;">
+      <div class="panel terminal s6-result">
+        <div class="terminal-head"><span class="dot red"></span>TRUSTLESS RESULT / BAD</div>
+        <div class="terminal-body">
+          <div class="big-number red">5/100</div>
+          <div class="body" style="margin-top:22px;">seller bond <span class="red">slashed 0.019 USDC</span></div>
+          <div class="body">buyer refund <span class="green">+0.02925 USDC</span></div>
+          <div class="hash" style="margin-top:22px;">0x58955ae21a4392721d59b75c8a144874b5457e1ff8b57013fb08bdb1cec9bafb</div>
+        </div>
+      </div>
+      <div class="panel terminal s6-votes">
+        <div class="terminal-head"><span class="dot amber"></span>validator votes</div>
+        <div class="terminal-body">
+          <div class="vote-row"><div>V1 pro</div><div class="bar red"><div class="fill" style="--w:5%;"></div></div><div class="red">5</div></div>
+          <div class="vote-row"><div>V2 flash</div><div class="bar red"><div class="fill" style="--w:0%;"></div></div><div class="red">0</div></div>
+          <div class="vote-row"><div>median</div><div class="bar red"><div class="fill" style="--w:5%;"></div></div><div class="red">5/100</div></div>
+          <div class="body muted" style="margin-top:28px;">block 48,278,909 · Arc Testnet</div>
+        </div>
+      </div>
+    </div>
+    <div class="caption"><span class="chip">0x58955ae2</span>BAD → 5/100 → slashed 0.019 · buyer +0.02925</div>
+  </section>
+
+  <section id="s7" class="clip beat" data-start="66.77" data-duration="7.22" data-track-index="0">
+    <div class="topbar"><span><span class="brand">Bazaar</span> / adversarial buyer</span><span>protection test</span></div>
+    <div class="panel terminal" style="margin-top:126px;">
+      <div class="terminal-head"><span class="dot amber"></span>new case</div>
+      <div class="terminal-body">
+        <div class="h1">What if the seller is honest, and the buyer lies?</div>
+        <div class="grid-2" style="margin-top:34px;">
+          <div class="panel s7-card" style="padding:32px;border-color:rgba(47,158,68,0.75);">
+            <div class="h3 green">GOOD delivery</div>
+            <div class="body">accurate 3-bullet rollup answer</div>
+          </div>
+          <div class="panel s7-card" style="padding:32px;border-color:rgba(240,140,0,0.75);">
+            <div class="h3 amber">LYING dispute</div>
+            <div class="body">buyer tries to slash anyway</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="caption"><span class="chip">counter-test</span>Buyers cannot weaponize disputes against honest sellers.</div>
+  </section>
+
+  <section id="s8" class="clip beat" data-start="73.99" data-duration="10.84" data-track-index="0">
+    <div class="topbar"><span><span class="brand">Bazaar</span> / good work protected</span><span>liar forfeits</span></div>
+    <div class="receipt panel">
+      <div class="terminal-head"><span class="dot green"></span><span>Arcscan receipt / GOOD + adversarial buyer</span><span class="badge green">Status: Success</span></div>
+      <div class="terminal-body">
+        <div class="h1">A dishonest buyer cannot slash an honest seller.</div>
+        <div class="receipt-row"><div class="muted">Transaction hash</div><div class="hash">0xe313a9024fcd58b3debcdfb1955f1b6b3bc4eb9727ce6f278b4c1af0b93a64d3</div></div>
+        <div class="receipt-row"><div class="muted">Block</div><div>48,278,916</div></div>
+        <div class="receipt-row"><div class="muted">Consensus</div><div><span class="green">100/100</span> · seller protected · bond slashed 0</div></div>
+        <div class="receipt-row"><div class="muted">Penalty</div><div><span class="amber">lying buyer forfeits 0.001 USDC</span> to the seller it tried to cheat</div></div>
+      </div>
+      <div class="terminal-body"><span class="badge green">PASS ✓</span></div>
+    </div>
+    <div class="caption"><span class="chip">tx 0xe313a902</span>GOOD + LYING buyer → 100/100 · liar forfeits 0.001</div>
+  </section>
+
+  <section id="s9" class="clip beat" data-start="84.83" data-duration="11.97" data-track-index="0">
+    <div class="topbar"><span><span class="brand">Bazaar</span> / validator accountability</span><span>honesty guardrail</span></div>
+    <div class="grid-2" style="margin-top:96px;align-items:start;">
+      <div class="panel terminal s9-card">
+        <div class="terminal-head"><span class="dot amber"></span>forced outlier demo</div>
+        <div class="terminal-body">
+          <div class="h2">V3 is intentionally forced off-consensus.</div>
+          <div class="body muted">This proves the accountability path. It is not presented as an organic model failure.</div>
+          <div class="vote-row" style="margin-top:28px;"><div>V1</div><div class="bar red"><div class="fill" style="--w:5%;"></div></div><div>5</div></div>
+          <div class="vote-row"><div>V2</div><div class="bar red"><div class="fill" style="--w:0%;"></div></div><div>0</div></div>
+          <div class="vote-row"><div>V3</div><div class="bar amber"><div class="fill" style="--w:90%;"></div></div><div>90</div></div>
+        </div>
+      </div>
+      <div class="panel terminal s9-card" style="border-color:rgba(224,49,49,0.72);">
+        <div class="terminal-head"><span class="dot red"></span>slashed validator</div>
+        <div class="terminal-body">
+          <div class="h3">0x468Ac1879e5828ac5bB6141F496BC622248904E3</div>
+          <div class="big-number red" style="margin-top:30px;">-0.01308</div>
+          <div class="body muted" style="margin-top:18px;">USDC validator stake slashed</div>
+          <div class="body" style="margin-top:34px;"><span class="green">circle:trustless</span> uses three distinct live models: pro · flash · chat.</div>
+        </div>
+      </div>
+    </div>
+    <div class="caption"><span class="chip">honest note</span>V3 forced outlier · accountability path live · Circle run uses 3 live models</div>
+  </section>
+
+  <section id="s10" class="clip beat" data-start="96.80" data-duration="12.01" data-track-index="0">
+    <div class="topbar"><span><span class="brand">Bazaar</span> / Circle full loop</span><span>Circle signs and broadcasts</span></div>
+    <div class="panel terminal" style="margin-top:88px;">
+      <div class="terminal-head"><span class="dot green"></span>npm run circle:trustless</div>
+      <div class="terminal-body">
+        <div class="grid-3">
+          <div class="s10-step">
+            <div class="badge green">OPEN COMPLETE</div>
+            <div class="hash" style="margin-top:18px;">0x7c9b913b8b98e0234c07a50210e70368f5d76bb3ff218274648ffd98b216330f</div>
+            <div class="muted mini">block 48,254,126</div>
+          </div>
+          <div class="s10-step">
+            <div class="badge amber">DISPUTE COMPLETE</div>
+            <div class="hash" style="margin-top:18px;">0xf7ea1cbb0ad4111a384e58d936782207b826a38beba4678a8cde36d1e43f4cd0</div>
+            <div class="muted mini">block 48,254,147</div>
+          </div>
+          <div class="s10-step">
+            <div class="badge green">RESOLVE REFUND</div>
+            <div class="hash" style="margin-top:18px;">0xf9dadc5ea3babacb618ea7a4e4548692d9d8832b2705d2d192467161c3055ee3</div>
+            <div class="muted mini">block 48,261,172 · Circle wallet +0.03079 USDC</div>
+          </div>
+        </div>
+        <div class="panel" style="margin-top:36px;padding:28px;border-color:rgba(77,171,247,0.68);">
+          <div class="h3 blue">Circle DCW 0x9608b21d... signs + broadcasts</div>
+          <div class="body muted">Bazaar never holds the key. Circle role = OPEN + DISPUTE; resolution lands after windows.</div>
+        </div>
+      </div>
+    </div>
+    <div class="caption"><span class="chip">Circle DCW</span>Circle opens + disputes + receives refund through the bonded rail.</div>
+  </section>
+
+  <section id="s11" class="clip beat" data-start="108.81" data-duration="10.67" data-track-index="0">
+    <div class="topbar"><span><span class="brand">Bazaar</span> / more live wallets</span><span>fractions of a cent</span></div>
+    <div class="grid-3" style="margin-top:92px;">
+      <div class="panel terminal s11-card">
+        <div class="terminal-head"><span class="dot green"></span>circle:pay</div>
+        <div class="terminal-body">
+          <div class="big-number green">+0.002</div>
+          <div class="body muted">USDC to seller</div>
+          <div class="hash" style="margin-top:22px;">0x4c6db2f95bcec0ff88a7578dda06228776527e5cd488a14a295b879c597c094f</div>
+          <div class="muted mini">block 48,241,615</div>
+        </div>
+      </div>
+      <div class="panel terminal s11-card">
+        <div class="terminal-head"><span class="dot amber"></span>beginner agent</div>
+        <div class="terminal-body">
+          <div class="mini amber">brain: anthropic:claude-opus-4-6</div>
+          <div class="body" style="font-size:20px;margin-top:16px;">"I only have 0.005 USDC so I can afford either, but since this is my first time and I really want a good answer I don't have to redo, I'll spend the extra tiny fraction of a cent on the one with good reviews rather than risk getting a sloppy answer from the cheap one."</div>
+          <div class="hash" style="margin-top:16px;">0x478a24023ea97b276b3c811e63efb18074a4009dfca7a01a550b915b6bd43803</div>
+        </div>
+      </div>
+      <div class="panel terminal s11-card">
+        <div class="terminal-head"><span class="dot green"></span>byoa:ext</div>
+        <div class="terminal-body">
+          <div class="h3">independent agent</div>
+          <div class="body muted">0x19D19136dB068c6f2653ae01a654933732aC525F</div>
+          <div class="big-number green" style="font-size:44px;margin-top:22px;">pays 0.002</div>
+          <div class="hash" style="margin-top:22px;">0xac74ffeebb45f9760018916fb03196915184a075ed77b800a9218ad92cb4799a</div>
+          <div class="muted mini">block 48,234,001</div>
+        </div>
+      </div>
+    </div>
+    <div class="caption"><span class="chip">real wallets</span>Circle pay · beginner agent · external agent all settle on Arc.</div>
+  </section>
+
+  <section id="s12" class="clip beat" data-start="119.48" data-duration="13.30" data-track-index="0">
+    <div class="topbar"><span><span class="brand">Bazaar</span> / scope card</span><span>what is real, what is not claimed</span></div>
+    <div class="grid-2" style="margin-top:98px;">
+      <div class="panel terminal s12-card" style="border-color:rgba(47,158,68,0.75);">
+        <div class="terminal-head"><span class="dot green"></span>real in this demo</div>
+        <div class="terminal-body scope-list">
+          <div class="scope-item"><span class="green">✓</span><span>Arc Testnet transactions, confirmed blocks, live hashes</span></div>
+          <div class="scope-item"><span class="green">✓</span><span>USDC-denominated math shown in human-readable units</span></div>
+          <div class="scope-item"><span class="green">✓</span><span>Circle Developer-Controlled wallet open → dispute → refund loop</span></div>
+          <div class="scope-item"><span class="green">✓</span><span>distinct validator models and separately-keyed agents</span></div>
+        </div>
+      </div>
+      <div class="panel terminal s12-card" style="border-color:rgba(240,140,0,0.75);">
+        <div class="terminal-head"><span class="dot amber"></span>not claimed</div>
+        <div class="terminal-body scope-list">
+          <div class="scope-item"><span class="amber">!</span><span>not mainnet production volume</span></div>
+          <div class="scope-item"><span class="amber">!</span><span>not custody by Bazaar; wallets sign their own flows</span></div>
+          <div class="scope-item"><span class="amber">!</span><span>not hiding the forced V3 outlier; it is the accountability demo</span></div>
+          <div class="scope-item"><span class="amber">!</span><span>no on-camera person, no screenshot-only explorer receipts</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="caption"><span class="chip">honesty</span>The demo shows mechanism proof, not a production-volume claim.</div>
+  </section>
+
+  <section id="s13" class="clip beat" data-start="132.78" data-duration="22.31" data-track-index="0">
+    <div class="topbar"><span><span class="brand">Bazaar</span> / final dashboard</span><span>ccheh.github.io/bazaar</span></div>
+    <div style="margin-top:72px;">
+      <div class="h1">Verify, don't trust.</div>
+      <div id="s13-summary" class="badge green" style="font-size:30px;padding:13px 20px;">✓ 8/8 confirmed live on Arc Testnet</div>
+    </div>
+    <div class="panel terminal" style="margin-top:32px;">
+      <div class="terminal-head"><span class="dot green"></span>clean-run receipt dashboard</div>
+      <div class="terminal-body">
+        <div class="dash-row dash-item"><div>BAD → seller slashed</div><div class="hash">0x58955ae21a4392721d59b75c8a144874b5457e1ff8b57013fb08bdb1cec9bafb</div><div class="badge green">✓ block 48,278,909</div></div>
+        <div class="dash-row dash-item"><div>GOOD → seller protected</div><div class="hash">0xe313a9024fcd58b3debcdfb1955f1b6b3bc4eb9727ce6f278b4c1af0b93a64d3</div><div class="badge green">✓ block 48,278,916</div></div>
+        <div class="dash-row dash-item"><div>Circle opens market</div><div class="hash">0x7c9b913b8b98e0234c07a50210e70368f5d76bb3ff218274648ffd98b216330f</div><div class="badge green">✓ block 48,254,126</div></div>
+        <div class="dash-row dash-item"><div>Circle disputes</div><div class="hash">0xf7ea1cbb0ad4111a384e58d936782207b826a38beba4678a8cde36d1e43f4cd0</div><div class="badge green">✓ block 48,254,147</div></div>
+        <div class="dash-row dash-item"><div>Circle refund resolve</div><div class="hash">0xf9dadc5ea3babacb618ea7a4e4548692d9d8832b2705d2d192467161c3055ee3 · +0.03079 USDC</div><div class="badge green">✓ block 48,261,172</div></div>
+        <div class="dash-row dash-item"><div>Circle nanopayment</div><div class="hash">0x4c6db2f95bcec0ff88a7578dda06228776527e5cd488a14a295b879c597c094f · 0.002 USDC</div><div class="badge green">✓ block 48,241,615</div></div>
+        <div class="dash-row dash-item"><div>Beginner agent</div><div class="hash">0x478a24023ea97b276b3c811e63efb18074a4009dfca7a01a550b915b6bd43803</div><div class="badge green">✓ block 48,253,629</div></div>
+        <div class="dash-row dash-item" style="border-bottom:0;"><div>External agent</div><div class="hash">0xac74ffeebb45f9760018916fb03196915184a075ed77b800a9218ad92cb4799a</div><div class="badge green">✓ block 48,234,001</div></div>
+      </div>
+    </div>
+    <div class="caption"><span class="chip">github.com/Ccheh/bazaar</span>8/8 confirmed · live on Arc Testnet · no operator referee</div>
+  </section>
+
+  <audio id="vo01" data-start="0.00" data-duration="10.42" data-track-index="2" data-volume="1" src="vo/scene01.wav"></audio>
+  <audio id="vo02" data-start="10.42" data-duration="10.60" data-track-index="2" data-volume="1" src="vo/scene02.wav"></audio>
+  <audio id="vo03" data-start="21.02" data-duration="9.96" data-track-index="2" data-volume="1" src="vo/scene03.wav"></audio>
+  <audio id="vo04" data-start="30.99" data-duration="11.86" data-track-index="2" data-volume="1" src="vo/scene04.wav"></audio>
+  <audio id="vo05" data-start="42.85" data-duration="12.01" data-track-index="2" data-volume="1" src="vo/scene05.wav"></audio>
+  <audio id="vo06" data-start="54.87" data-duration="11.90" data-track-index="2" data-volume="1" src="vo/scene06.wav"></audio>
+  <audio id="vo07" data-start="66.77" data-duration="7.22" data-track-index="2" data-volume="1" src="vo/scene07.wav"></audio>
+  <audio id="vo08" data-start="73.99" data-duration="10.84" data-track-index="2" data-volume="1" src="vo/scene08.wav"></audio>
+  <audio id="vo09" data-start="84.83" data-duration="11.97" data-track-index="2" data-volume="1" src="vo/scene09.wav"></audio>
+  <audio id="vo10" data-start="96.80" data-duration="12.01" data-track-index="2" data-volume="1" src="vo/scene10.wav"></audio>
+  <audio id="vo11" data-start="108.81" data-duration="10.67" data-track-index="2" data-volume="1" src="vo/scene11.wav"></audio>
+  <audio id="vo12" data-start="119.48" data-duration="13.30" data-track-index="2" data-volume="1" src="vo/scene12.wav"></audio>
+  <audio id="vo13" data-start="132.78" data-duration="22.31" data-track-index="2" data-volume="1" src="vo/scene13.wav"></audio>
+
+  <script src="vendor/gsap.min.js"></script>
   <script>
-    // Paused, seekable timeline — HyperFrames seeks it per frame. Times are absolute (seconds).
+    const beats = [
+      ["#s1", 0.00, 10.42, [".receipt", ".stamp"]],
+      ["#s2", 10.42, 10.60, [".s2-card", ".flow"]],
+      ["#s3", 21.02, 9.96, [".terminal", ".s3-card"]],
+      ["#s4", 30.99, 11.86, [".s4-left", ".s4-arch"]],
+      ["#s5", 42.85, 12.01, [".core-box", ".core-step"]],
+      ["#s6", 54.87, 11.90, [".s6-result", ".s6-votes"]],
+      ["#s7", 66.77, 7.22, [".terminal", ".s7-card"]],
+      ["#s8", 73.99, 10.84, [".receipt", ".badge"]],
+      ["#s9", 84.83, 11.97, [".s9-card", ".vote-row"]],
+      ["#s10", 96.80, 12.01, [".s10-step", ".panel"]],
+      ["#s11", 108.81, 10.67, [".s11-card"]],
+      ["#s12", 119.48, 13.30, [".s12-card", ".scope-item"]],
+      ["#s13", 132.78, 22.31, [".dash-item", "#s13-summary"]]
+    ];
     const tl = gsap.timeline({ paused: true });
-    // Scene 1: receipt card rises, then the SLASHED stamp snaps in.
-    tl.from("#s1card", { y: 40, opacity: 0, duration: 0.6 }, 0.1)
-      .from("#s1stamp", { scale: 2.2, opacity: 0, rotate: -30, duration: 0.4, ease: "back.out(2)" }, 0.9);
-    // Scene 5: fade in + stagger the two CORE boxes.
-    tl.to("#s5", { opacity: 1, duration: 0.4 }, 44)
-      .from(".s5box", { y: 30, opacity: 0, stagger: 0.25, duration: 0.5 }, 44.2)
-      .to("#s5", { opacity: 0, duration: 0.3 }, 57.7);
-    // Scene 13: fade in, summary pops, badges flip green in sequence.
-    tl.to("#s13", { opacity: 1, duration: 0.4 }, 146)
-      .from("#s13sum", { scale: 0.85, opacity: 0, duration: 0.5, ease: "back.out(2)" }, 146.3)
-      .from(".rb", { opacity: 0, x: 12, stagger: 0.35, duration: 0.4 }, 147);
+    tl.to({}, { duration: 155.09 }, 0);
+    beats.forEach(([selector, start, duration, targets]) => {
+      tl.set(selector, { autoAlpha: 1 }, start);
+      const scoped = targets.map((target) => `${selector} ${target}`).join(",");
+      tl.from(scoped, {
+        y: 22,
+        opacity: 0,
+        stagger: 0.08,
+        duration: 0.42,
+        ease: "power2.out"
+      }, start + 0.18);
+      if (selector !== "#s13") {
+        tl.set(selector, { autoAlpha: 0 }, start + duration - 0.04);
+      }
+    });
+    tl.set("#s13", { autoAlpha: 1 }, 132.78);
+    tl.from("#s13 .badge", { scale: 0.92, opacity: 0, stagger: 0.05, duration: 0.34, ease: "back.out(2)" }, 133.25);
     window.__timelines = window.__timelines || {};
-    window.__timelines["bazaar"] = tl;
+    window.__timelines.bazaar = tl;
   </script>
 </div>
+</body>
+</html>
