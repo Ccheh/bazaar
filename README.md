@@ -123,7 +123,7 @@ re-litigated after the fact — the exact failure mode that broke a $60M UMA dis
   contractExecution API (Circle signs/broadcasts) — so Circle funds are **load-bearing in the slash
   mechanism**, not a side transfer. Open ([tx 0x7c9b913b](https://testnet.arcscan.app/tx/0x7c9b913b8b98e0234c07a50210e70368f5d76bb3ff218274648ffd98b216330f))
   + dispute ([tx 0xf7ea1cbb](https://testnet.arcscan.app/tx/0xf7ea1cbb0ad4111a384e58d936782207b826a38beba4678a8cde36d1e43f4cd0))
-  confirmed; the validator resolve (seller slash + refund back to the Circle wallet) lands after the 30+30-min windows.
+  confirmed — and the validator resolve **completed**: consensus 0/100 → seller bond slashed 0.02, **0.03079 USDC refunded to the Circle wallet** ([resolve 0xf9dadc5e](https://testnet.arcscan.app/tx/0xf9dadc5ea3babacb618ea7a4e4548692d9d8832b2705d2d192467161c3055ee3)). Circle drove the full open→dispute→refund loop through the bonded rail.
 - **Beginner onboarding agent — `npm run beginner`:** a simulated newcomer (Claude-powered, its OWN
   fresh wallet) reasons in a first-timer voice about which cheap service to try, then pays on-chain
   ([tx](https://testnet.arcscan.app/tx/0x478a24023ea97b276b3c811e63efb18074a4009dfca7a01a550b915b6bd43803),
@@ -151,16 +151,31 @@ We'd rather under-claim. What a single run actually proves today:
   the current demo the validator wallets are **team-funded/operated** (distinct models, distinct keys,
   but same operator) — it is a faithful mechanism demonstration, not yet a real multi-party validator
   set. That last step (outside operators staking) is the remaining gap.
+- **Independence is per-model, not per-provider (today):** the live validators share a vendor
+  (DeepSeek — v4-pro / v4-flash / chat), so a *correlated* model bias is a residual that a real
+  multi-party, multi-provider set is meant to close. The on-chain settlement is operator-free; the
+  off-chain judgment is still N LLM calls.
+- **Calibration weighting is dormant at demo scale:** with only 1–2 resolved markets every validator
+  sits at the 0.50× starting calibration, so the shown median is effectively unweighted — the weighting
+  becomes load-bearing once validators build an on-chain accuracy record over many markets.
+- **The headline run penalized a strict no-answer:** in the committed slash run the "bad" delivery was
+  empty (an LLM hiccup hit the fallback) and the deviating validator was a *forced* outlier to exercise
+  the slash path deterministically; a run where three live models organically disagree on a borderline
+  delivery is the next proof.
 - **Circle wallets:** `npm run circle:pay` is a standalone DCW nanopayment (parallel proof). `npm run
   circle:trustless` goes further — the Circle wallet itself **opens + disputes** the bonded Crucible
   market (open/dispute txs confirmed), so Circle is wired **through** the slash rail; the validator
-  resolve completes after the protocol windows. Either way Bazaar never holds the wallet's key.
+  resolve **completed** (0xf9dadc5e — seller slashed, 0.03079 refunded to the Circle wallet); the full loop is closed. Either way Bazaar never holds the wallet's key.
 - **External usage:** `npm run byoa:ext` puts a separate, independently-keyed agent into the
   settlement loop on-chain — but it is a self-funded wallet, not yet a real third party.
 - **Discovery** resolves a **published agentId directory** (+ best-effort recent-event scan), read
   on-chain; it is not a full permissionless crawl (that needs an indexer).
 
-## Run slice 1
+## Run
+
+> ⭐ The headline claim is **`npm run trustless`** (the trustless staked-validator slash) and
+> **`npm run verify`** / the [live dashboard](https://ccheh.github.io/bazaar/) to confirm it.
+> `npm run demo` is a fast, plain-English **non-trustless** preview (mock resolver) — nice first look, not the core claim.
 
 ```bash
 cd bazaar
@@ -195,7 +210,7 @@ still runs. **Testnet only.**
 Each in-repo file maps to exactly the tx hashes the README cites:
 - `.trustless-state.json` — the trustless run: bad-slash `0x5469f51c`, lying-buyer forfeit `0x2d411523`, V3 validator slash (in the bad-market tx).
 - `circle-pay.json` — Circle DCW nanopayment `0x4c6db2f9`.
-- `.circle-trustless-state.json` — Circle wallet open `0x7c9b913b` + dispute `0xf7ea1cbb` (resolve outcome added when the windows close).
+- `.circle-trustless-state.json` — Circle wallet open `0x7c9b913b` + dispute `0xf7ea1cbb` + resolve `0xf9dadc5e` (seller slashed, 0.03079 refunded to the Circle wallet) — full loop closed.
 - `byoa-external.json` — external-agent payment `0xac74ffee`.
 - `beginner-agent.json` — beginner agent payment `0x478a2402`.
 - `.trustless-state.run1.json` — an earlier trustless run (kept for reference).
