@@ -8,6 +8,6 @@
   },
   "dependencies": {
     "gsap": "3.12.5",
-    "hyperframes": "0.7.3"
+    "hyperframes": "0.7.92"
   }
 }
