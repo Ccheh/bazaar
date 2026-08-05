@@ -52,13 +52,21 @@
   </div>
   <div id="groups"></div>
   <footer>
-    Read-only RPC: <span class="hash">rpc.testnet.arc.network</span> · explorer: <a href="https://testnet.arcscan.app" target="_blank" rel="noopener">arcscan.app</a>.
+    Read-only RPC: <span class="hash">Arc Testnet public providers</span> (dRPC → QuickNode → arc.network, first that answers) · explorer: <a href="https://testnet.arcscan.app" target="_blank" rel="noopener">arcscan.app</a>.
     Each row is a real transaction you can open and check yourself. Honest scope (testnet; team-operated validators today) is in the
     <a href="https://github.com/Ccheh/bazaar#trust-model--whats-real-vs-roadmap-honest" target="_blank" rel="noopener">repo trust model</a>.
   </footer>
 </div>
 <script>
-const RPC="https://rpc.testnet.arc.network", EXPLORER="https://testnet.arcscan.app/tx/";
+// Arc's own rpc.testnet.arc.network sends no Access-Control-Allow-Origin, so a
+// browser can't read it. These provider endpoints do send CORS headers AND carry
+// full history; the official one stays last in case it regains CORS later.
+const RPCS=[
+  "https://rpc.drpc.testnet.arc.network",
+  "https://rpc.quicknode.testnet.arc.network",
+  "https://rpc.testnet.arc.network",
+];
+const EXPLORER="https://testnet.arcscan.app/tx/";
 const GROUPS=[
   {name:"⭐ Trustless slash — staked validators decide, not the operator", core:true, items:[
     {label:"Bad delivery → seller bond SLASHED", detail:"consensus 5/100 → seller bond slashed 0.019 USDC, buyer refunded 0.02925; deviating validator V3 itself slashed 0.01308.", tx:"0x58955ae21a4392721d59b75c8a144874b5457e1ff8b57013fb08bdb1cec9bafb"},
@@ -90,14 +98,24 @@ for(const g of GROUPS){
     check(it.tx, card.querySelector(".badge"));
   }
 }
+async function getReceipt(tx){
+  let lastErr;
+  for(const rpc of RPCS){
+    try{
+      const ctl=new AbortController(); const to=setTimeout(()=>ctl.abort(),8000);
+      const r=await fetch(rpc,{method:"POST",headers:{"content-type":"application/json"},signal:ctl.signal,
+        body:JSON.stringify({jsonrpc:"2.0",id:1,method:"eth_getTransactionReceipt",params:[tx]})});
+      clearTimeout(to);
+      const j=await r.json();
+      if(j.result) return j.result;      // found — done
+      lastErr=new Error("null result");  // pruned node: try the next one
+    }catch(e){ lastErr=e; }
+  }
+  throw lastErr||new Error("all RPCs failed");
+}
 async function check(tx, badge){
   try{
-    const ctl=new AbortController(); const to=setTimeout(()=>ctl.abort(),8000);
-    const r=await fetch(RPC,{method:"POST",headers:{"content-type":"application/json"},signal:ctl.signal,
-      body:JSON.stringify({jsonrpc:"2.0",id:1,method:"eth_getTransactionReceipt",params:[tx]})});
-    clearTimeout(to);
-    const j=await r.json();
-    const rc=j.result;
+    const rc=await getReceipt(tx);
     if(rc && rc.status==="0x1"){
       const blk=parseInt(rc.blockNumber,16);
       badge.className="badge b-ok"; badge.textContent=`✓ confirmed · block ${blk.toLocaleString()}`;
