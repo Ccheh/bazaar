@@ -36,6 +36,7 @@
   .b-pending{color:var(--muted);border:1px solid var(--line)}
   .b-bad{color:var(--bad);border:1px solid var(--bad)}
   .arc{font-size:12.5px;font-weight:700}
+  .update{border-left:3px solid var(--accent);padding:9px 12px;margin:0 0 24px;color:var(--muted);background:var(--panel)}
   footer{margin-top:34px;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);padding-top:16px}
 </style>
 </head>
@@ -49,6 +50,11 @@
     <span class="summary" id="summary">Checking on-chain…</span>
     <span class="pill">Arc Testnet · chain 5042002</span>
     <span class="pill"><a href="https://github.com/Ccheh/bazaar" target="_blank" rel="noopener">github.com/Ccheh/bazaar</a></span>
+  </div>
+  <div class="update"><b>Maintained after Lepton.</b> v0.2 adds multi-RPC verification, deterministic tests, and CI.
+    Historical receipts remain 8/8 verifiable. Honest status: the wallets below are operator-run or separately keyed demos;
+    Bazaar does not yet claim a third-party paying customer or independent validator operator.
+    <a href="https://github.com/Ccheh/bazaar/blob/main/docs/POST_LEPTON.md" target="_blank" rel="noopener">Read the status update.</a>
   </div>
   <div id="groups"></div>
   <footer>
@@ -77,10 +83,10 @@ const GROUPS=[
     {label:"Circle DCW disputes", detail:"the same Circle wallet files the dispute that triggers the validator vote.", tx:"0xf7ea1cbb0ad4111a384e58d936782207b826a38beba4678a8cde36d1e43f4cd0"},
     {label:"Resolve → refund back to the Circle wallet", detail:"consensus 0/100 → seller bond slashed, 0.03079 USDC refunded to the Circle wallet — Circle funds flowed through the slash mechanism.", tx:"0xf9dadc5ea3babacb618ea7a4e4548692d9d8832b2705d2d192467161c3055ee3"},
   ]},
-  {name:"Circle nanopayment + independent agents", items:[
+  {name:"Circle nanopayment + separately keyed demo agents", items:[
     {label:"Circle DCW sub-cent nanopayment", detail:"a Circle wallet pays a seller 0.002 USDC for real AI work — no SDK, raw REST + entity-secret ceremony.", tx:"0x4c6db2f95bcec0ff88a7578dda06228776527e5cd488a14a295b879c597c094f"},
-    {label:"Beginner agent (Claude) pays on-chain", detail:"a Claude-powered newcomer with its OWN wallet reasons like a first-timer and pays — the onboarding path a real person can run.", tx:"0x478a24023ea97b276b3c811e63efb18074a4009dfca7a01a550b915b6bd43803"},
-    {label:"Independent external agent pays a seller", detail:"a separately-keyed agent (not the main buyer) funds its own escrow and pays over the public rail.", tx:"0xac74ffeebb45f9760018916fb03196915184a075ed77b800a9218ad92cb4799a"},
+    {label:"New-wallet demo agent pays on-chain", detail:"an LLM-powered buyer with its own fresh wallet reasons like a first-timer and pays — a reproducible onboarding path.", tx:"0x478a24023ea97b276b3c811e63efb18074a4009dfca7a01a550b915b6bd43803"},
+    {label:"Separately keyed demo agent pays a seller", detail:"a self-funded test wallet (not the main buyer) exercises the public rail. This is not claimed as third-party usage.", tx:"0xac74ffeebb45f9760018916fb03196915184a075ed77b800a9218ad92cb4799a"},
   ]},
 ];
 let total=0, ok=0;

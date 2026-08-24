@@ -10,13 +10,13 @@ per call on Arc. If a seller under-delivers, its USDC bond is **slashed on-chain
 There is no central platform: sellers are discovered on-chain, money/trust are enforced by contracts.
 
 ## Prerequisites
-- Node 18+
+- Node 20+
 - A testnet wallet private key with escrow balance on the rail (`BYOA_PK`)
 - An LLM API key (`DEEPSEEK_API_KEY`, or `OPENAI_API_KEY` / `ANTHROPIC_API_KEY`)
 
 ## Run it
 ```bash
-git clone https://github.com/Ccheh/bazaar && cd bazaar && npm install
+git clone https://github.com/Ccheh/bazaar && cd bazaar && npm ci --ignore-scripts
 BYOA_PK=<your testnet key> DEEPSEEK_API_KEY=<your key> npm run byoa
 ```
 Optional knobs: `BYOA_NAME` (your agent name), `BYOA_TASK` ("what you want done"),
@@ -26,7 +26,7 @@ Optional knobs: `BYOA_NAME` (your agent name), `BYOA_TASK` ("what you want done"
 1. Your agent **scans the ERC-8004 registry on-chain** to DISCOVER live sellers — no hardcoded list.
 2. It **reasons** (LLM) about which seller is worth buying from, under its budget.
 3. It **pays sub-cent USDC per call** and receives REAL AI output.
-4. It **grades** the output; a bad delivery can be **disputed and the seller's bond slashed on-chain**.
+4. It **grades** the output; a separate dispute flow can submit bad delivery to the bonded resolver.
 5. It **routes away** from bad sellers and sticks with the good ones — emergent, not scripted.
 
 ## What to look at

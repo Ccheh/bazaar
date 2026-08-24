@@ -1,5 +1,8 @@
 # Bazaar — Proof-of-Quality payments for AI services
 
+[![CI](https://github.com/Ccheh/bazaar/actions/workflows/ci.yml/badge.svg)](https://github.com/Ccheh/bazaar/actions/workflows/ci.yml)
+[![Live evidence](https://img.shields.io/badge/Arc_evidence-8%2F8_verified-2f9e44)](https://ccheh.github.io/bazaar/)
+
 > An autonomous agent pays **per call** for **real AI work**; if the work is bad, the provider's
 > USDC bond is **slashed on-chain** by an independent staked-validator consensus and the buyer
 > refunded — the chain enforces it, no platform takes a cut. (Honest scope of the live demo: see
@@ -21,6 +24,11 @@ A **Lepton Agents Hackathon** project (Canteen × Circle × Arc, Jun 2026).
 > 🔎 **[Live evidence dashboard → ccheh.github.io/bazaar](https://ccheh.github.io/bazaar/)** — opens in your
 > browser and calls Arc Testnet directly (read-only) to confirm every slash/payment transaction live, with
 > Arcscan links. No install, no keys, no waiting — the web version of `npm run verify`.
+
+> **Maintained after Lepton:** v0.2 adds a resilient multi-RPC evidence verifier, deterministic tests,
+> and a CI quality gate. The project is listed in the
+> [Arc Open Source Showcase](https://arc-showcase.thecanteenapp.com/?tag=x402). See the
+> [post-Lepton status](docs/POST_LEPTON.md) and [changelog](CHANGELOG.md).
 
 ## How it works
 
@@ -90,7 +98,8 @@ re-litigated after the fact — the exact failure mode that broke a $60M UMA dis
   slash mid-run (`npm run economy`), so under-delivery is penalised live, not just in a script.
 - **Bring-Your-Own-Agent — DONE:** an external, independently-keyed agent joins the live market
   (`npm run market`, then `npm run byoa` with your own wallet + LLM key) and pays real USDC to the
-  sellers — genuine cross-party, agent-to-agent traction (see [HANDBOOK.md](HANDBOOK.md)).
+  sellers. The onboarding path is reproducible, but the committed receipt was owner-operated and
+  is not claimed as third-party traction (see [HANDBOOK.md](HANDBOOK.md)).
 - **On-chain discovery (ERC-8004) — DONE:** sellers register on Circle's ERC-8004 IdentityRegistry
   with their endpoint as the agentURI (`npm run register`); buyers discover them from on-chain
   `Registered` events and probe the endpoints (no central list) — permissionless discovery.
@@ -111,10 +120,10 @@ re-litigated after the fact — the exact failure mode that broke a $60M UMA dis
     **V3 itself was slashed 0.01308 USDC** on-chain (in the bad-market tx above); the identical off-vote
     *within* tolerance of the 100/100 consensus was correctly NOT slashed.
   (A run with **three live distinct models** — pro/flash/chat — is `npm run circle:trustless`.)
-- **External agent over the public rail — DONE — `npm run byoa:ext`:** a separate, independently-keyed
+- **Separately keyed demo agent over the public rail — DONE — `npm run byoa:ext`:** a separate, independently-keyed
   agent (not the main buyer) funds its own escrow and pays a seller; the seller settles on-chain
   ([tx](https://testnet.arcscan.app/tx/0xac74ffeebb45f9760018916fb03196915184a075ed77b800a9218ad92cb4799a)).
-  (Honest scope: a distinct self-funded wallet exercising the BYOA path end-to-end — not yet a real third party.)
+  (Honest scope: a distinct self-funded wallet exercising the BYOA path end-to-end — not a real third party.)
 - **Circle Developer-Controlled Wallets — DONE — `npm run circle:pay`:** an agent hires a seller, gets
   real LLM work, and pays a **sub-cent USDC nanopayment from a Circle-managed wallet** on ARC-TESTNET;
   Circle signs + broadcasts (we never hold the key) — committed proof in
@@ -195,8 +204,9 @@ npm run beginner   # a Claude-powered newcomer (own wallet) reasons + pays on-ch
 npm run register   # publish each seller's endpoint on the ERC-8004 registry (on-chain discovery)
 npm run market     # keep the seller fleet live so external agents can join
 npm run byoa       # external buyer DISCOVERS sellers on-chain + pays (set BYOA_PK to your wallet)
-npm run byoa:ext   # independently-keyed agent funds its own escrow + pays a seller on-chain (traction proof)
+npm run byoa:ext   # owner-operated, separately-keyed demo wallet exercises the public payment path
 npm run verify     # read-only: print every committed evidence tx + arcscan links (no keys/wait needed)
+npm run ci         # typecheck + deterministic evidence-verifier tests (no keys or RPC required)
 npm run settle     # operator batch-settles accepted claims on-chain
 ```
 

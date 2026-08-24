@@ -1,5 +1,8 @@
 # Bazaar — Lepton Agents Hackathon submission
 
+> Historical submission packet from June 2026. For current, post-event evidence and honest usage
+> status, see [docs/POST_LEPTON.md](docs/POST_LEPTON.md).
+
 **Checklist (forms.gle):**
 - [x] Public GitHub repo — https://github.com/Ccheh/bazaar (clone runs; `npm run verify` = 8/8 on-chain)
 - [x] **Demo video link** (<3 min): **https://youtu.be/loRvV3yG28c** — YouTube *unlisted*, 2:35 (also in README)
