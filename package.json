@@ -1,6 +1,6 @@
 {
   "name": "bazaar",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "type": "module",
   "description": "Bazaar — proof-of-quality payments for AI services on Arc: autonomous agents pay sub-cent USDC per call for real AI work; under-delivery is slashed on-chain and the buyer refunded.",

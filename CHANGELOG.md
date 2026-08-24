@@ -2,6 +2,13 @@
 
 All notable changes to Bazaar are recorded here. Dates use UTC.
 
+## 0.2.1 - 2026-08-25
+
+- Updated the demo renderer's transitive `nanoid` dependency from 3.3.16 to
+  3.3.18, resolving GHSA-2v37-7h3g-55p8.
+- Confirmed zero known vulnerabilities in both the Bazaar runtime and the
+  isolated demo-rendering dependency graph.
+
 ## 0.2.0 - 2026-08-25
 
 Post-Lepton maintenance release.
